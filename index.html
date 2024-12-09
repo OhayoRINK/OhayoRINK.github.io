@@ -10,19 +10,25 @@
     <button id="random-link-button">랜덤 링크 방문</button>
 
     <script>
-        // JSON 파일의 링크를 불러오고 랜덤 선택
-        async function fetchRandomLink() {
-            try {
-                const response = await fetch('./youtube_links.json'); // JSON 파일 경로
-                const links = await response.json();
-                const randomLink = links[Math.floor(Math.random() * links.length)];
-                window.open(randomLink, '_blank'); // 새 탭에서 열기
-            } catch (error) {
-                console.error('링크를 가져오는 중 오류가 발생했습니다:', error);
-            }
+        // 유튜브 링크 데이터 (직접 포함)
+        const youtubeLinks = [
+    "https://youtu.be/W-Xr4ceMOXI?si=SGjJT_q8zNtlvgKY",
+    "https://youtu.be/Y52kljOrCsc?si=Yh3bItRXzYIhGFBS",
+    "https://youtu.be/5j8voUwxzmU?si=txZtHVNdPNE31Ga7",
+    "https://youtu.be/HBoqsgRoDw4?si=fMPXMLUyYSBSaryf",
+    "https://youtu.be/gGQqeRJub3E?si=MZBg5JGmJEMDbmH3",
+    "https://youtu.be/PybjJ4CUDF8?si=AhwJaDX7JE3P8bu-",
+    "https://youtu.be/Pgd_XVwBVU0?si=_a60AVv5nY-Kvhak",
+    "https://youtu.be/CmaLZo-DTlU?si=H7ntV3dz19ifL1J-"
+        ];
+
+        // 랜덤 링크 선택 및 새 탭 열기 함수
+        function fetchRandomLink() {
+            const randomLink = youtubeLinks[Math.floor(Math.random() * youtubeLinks.length)];
+            window.open(randomLink, '_blank'); // 새 탭에서 열기
         }
 
-        // 버튼 클릭 이벤트
+        // 버튼 클릭 이벤트 연결
         document.getElementById('random-link-button').addEventListener('click', fetchRandomLink);
     </script>
 </body>
