@@ -3,33 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>랜덤 유튜브 링크</title>
+    <title>랜덤 스텔라이브 노래</title>
 </head>
 <body>
-    <h1>랜덤 유튜브 링크 방문하기</h1>
-    <button id="random-link-button">랜덤 링크 방문</button>
+    <h1>랜덤 스텔라이브 노래로 이동 중...</h1>
+    <p>5초 후에 랜덤 스텔라이브 노래로 이동합니다. 잠시만 기다려 주세요!</p>
 
     <script>
-        // 유튜브 링크 데이터 (직접 포함)
-const youtubeLinks = [
-    "https://www.youtube.com/watch?v=W-Xr4ceMOXI",
-    "https://www.youtube.com/watch?v=Y52kljOrCsc",
-    "https://www.youtube.com/watch?v=5j8voUwxzmU",
-    "https://www.youtube.com/watch?v=HBoqsgRoDw4",
-    "https://www.youtube.com/watch?v=gGQqeRJub3E",
-    "https://www.youtube.com/watch?v=PybjJ4CUDF8",
-    "https://www.youtube.com/watch?v=Pgd_XVwBVU0",
-    "https://www.youtube.com/watch?v=CmaLZo-DTlU"
-];
+        // 유튜브 링크 데이터
+        const youtubeLinks = [
+            "https://www.youtube.com/watch?v=W-Xr4ceMOXI",
+            "https://www.youtube.com/watch?v=Y52kljOrCsc",
+            "https://www.youtube.com/watch?v=5j8voUwxzmU",
+            "https://www.youtube.com/watch?v=HBoqsgRoDw4",
+            "https://www.youtube.com/watch?v=gGQqeRJub3E",
+            "https://www.youtube.com/watch?v=PybjJ4CUDF8",
+            "https://www.youtube.com/watch?v=Pgd_XVwBVU0",
+            "https://www.youtube.com/watch?v=CmaLZo-DTlU"
+        ];
 
-        // 랜덤 링크 선택 및 새 탭 열기 함수
-        function fetchRandomLink() {
+        // 랜덤 링크로 자동 이동
+        function redirectToRandomLink() {
             const randomLink = youtubeLinks[Math.floor(Math.random() * youtubeLinks.length)];
-            window.open(randomLink, '_blank'); // 새 탭에서 열기
+            window.location.href = randomLink; // 현재 창에서 이동
         }
 
-        // 버튼 클릭 이벤트 연결
-        document.getElementById('random-link-button').addEventListener('click', fetchRandomLink);
+        // 5초 후에 랜덤 링크로 이동
+        setTimeout(redirectToRandomLink, 5000);
     </script>
 </body>
 </html>
