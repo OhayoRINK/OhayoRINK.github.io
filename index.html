@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜덤 유튜브 링크</title>
+</head>
+<body>
+    <h1>랜덤 유튜브 링크 방문하기</h1>
+    <button id="random-link-button">랜덤 링크 방문</button>
+
+    <script>
+        // JSON 파일의 링크를 불러오고 랜덤 선택
+        async function fetchRandomLink() {
+            try {
+                const response = await fetch('./youtube_links.json'); // JSON 파일 경로
+                const links = await response.json();
+                const randomLink = links[Math.floor(Math.random() * links.length)];
+                window.open(randomLink, '_blank'); // 새 탭에서 열기
+            } catch (error) {
+                console.error('링크를 가져오는 중 오류가 발생했습니다:', error);
+            }
+        }
+
+        // 버튼 클릭 이벤트
+        document.getElementById('random-link-button').addEventListener('click', fetchRandomLink);
+    </script>
+</body>
+</html>
