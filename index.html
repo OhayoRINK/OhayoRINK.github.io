@@ -6,8 +6,8 @@
     <title>랜덤 스텔라이브 노래</title>
 </head>
 <body>
-    <h1>랜덤한 스텔라이브 노래</h1>
-    <p>아래의 버튼을 눌러 새로운 랜덤 영상을 확인하세요!</p>
+    <h1>랜덤한 스텔라이브 노래 재생기입니다</h1>
+    <p>버튼을 눌러 랜덤한 노래를 찾아볼까요?</p>
 
     <!-- iframe을 추가할 위치 -->
     <div id="video-container" style="margin-top: 20px;">
@@ -15,7 +15,7 @@
     </div>
 
     <!-- 버튼 추가 -->
-    <button id="randomize-button" style="margin-top: 20px; padding: 10px 20px; font-size: 16px;">다른 영상 보기</button>
+    <button id="randomize-button" style="margin-top: 20px; padding: 10px 20px; font-size: 16px;">다른 노래래 보기</button>
 
 
     <script>
@@ -150,7 +150,7 @@
         }
 
         // 초기 영상 로드 (3초 후)
-        setTimeout(showRandomVideo, 3000);
+        setTimeout(showRandomVideo, 1000);
 
         // 버튼 클릭 이벤트 추가
         document.getElementById('randomize-button').addEventListener('click', showRandomVideo);
