@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>랜덤 스텔라이브 노래로 이동 중...</h1>
-    <p>5초 후에 랜덤 스텔라이브 노래로 이동합니다. 잠시만 기다려 주세요!</p>
+    <p>3초 후에 랜덤 스텔라이브 노래로 이동합니다. 잠시만 기다려 주세요!</p>
 
     <script>
         // 유튜브 링크 데이터
@@ -129,17 +129,26 @@
             "https://youtu.be/G5A-UDCxUiI?si=7aJjEJZF8DC-dgnY", // 시부키 레오
             "https://youtu.be/sWZoIawG0tA?si=wo5nXQkfSvPrdpk9", // 시부키 여우비
             "https://youtu.be/KtZi0BN6lwg?si=X6NlZRq9qyFEflzX", // 시부키 너에게 메롱(데뷔곡)
-            "https://youtu.be/L1KBaVHAdS8?si=TE4_wkzcMk9RQdGQ" // 강지 이스터에그
         ];
 
-        // 랜덤 링크로 자동 이동
-        function redirectToRandomLink() {
-            const randomLink = youtubeLinks[Math.floor(Math.random() * youtubeLinks.length)];
-            window.location.href = randomLink; // 현재 창에서 이동
+        // 특별 링크(강지 내죽생)
+        const specialLink = "https://youtu.be/L1KBaVHAdS8?si=TE4_wkzcMk9RQdGQ";
+
+        // 0.05% 확률로 특별 링크 선택
+        const randomNumber = Math.random();
+        let selectedLink;
+
+        if (randomNumber < 0.0005) { // 0.05% 확률
+            selectedLink = specialLink;
+        } else {
+            // 나머지 99.95% 확률로 일반 링크 중 하나 선택
+            selectedLink = youtubeLinks[Math.floor(Math.random() * youtubeLinks.length)];
         }
 
-        // 5초 후에 랜덤 링크로 이동
-        setTimeout(redirectToRandomLink, 5000);
+        // 3초 후 선택된 링크로 이동
+        setTimeout(() => {
+            window.location.href = selectedLink;
+        }, 3000);
     </script>
 </body>
 </html>
