@@ -6,8 +6,17 @@
     <title>랜덤 스텔라이브 노래</title>
 </head>
 <body>
-    <h1>랜덤한 스텔라이브 노래를 찾는 중...</h1>
-    <p>3초 후에 랜덤한 스텔라이브 노래로 이동합니다. 잠시 기다려 주세요!</p>
+    <h1>랜덤한 스텔라이브 노래</h1>
+    <p>아래의 버튼을 눌러 새로운 랜덤 영상을 확인하세요!</p>
+
+    <!-- iframe을 추가할 위치 -->
+    <div id="video-container" style="margin-top: 20px;">
+        <iframe id="youtube-video" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <!-- 버튼 추가 -->
+    <button id="randomize-button" style="margin-top: 20px; padding: 10px 20px; font-size: 16px;">다른 영상 보기</button>
+
 
     <script>
         // 유튜브 링크 데이터
@@ -110,7 +119,7 @@
             "https://youtu.be/Rr2GjXAgJ9E?si=7Fz0k4J1CLY6-Tfr", // 리코 맑은 날
             "https://youtu.be/T10fmu7T4eA?si=2eN-Adi79mGuywdt", // 리코 지구를 줄게
             "https://youtu.be/CtXv2_NBBOU?si=QCTb-KIVwtXv5qtt", // 리코 괴수의 꽃 노래
-            "https://youtu.be/lfxl4YlY0lE?si=cfsUcXmbKSu7OLgW", // 리코 용사(데뷔곡) 
+            "https://youtu.be/lfxl4YlY0lE?si=cfsUcXmbKSu7OLgW", // 리코 용사(데뷔곡)
             "https://youtu.be/v7UNI2YuqFc?si=hm37Q9Z-1Z5TIHrL", // 나나 가짜얼굴(데뷔곡)
             "https://youtu.be/vM_XT3MeLrc?si=iKlYLuHt-_4iUscT", // 나나 푸른 산호초
             "https://youtu.be/qpBCZ6kYVb4?si=mffWxRhxOpm0jVtJ", // 나나 사무라이하트
@@ -129,26 +138,22 @@
             "https://youtu.be/G5A-UDCxUiI?si=7aJjEJZF8DC-dgnY", // 시부키 레오
             "https://youtu.be/sWZoIawG0tA?si=wo5nXQkfSvPrdpk9", // 시부키 여우비
             "https://youtu.be/KtZi0BN6lwg?si=X6NlZRq9qyFEflzX", // 시부키 너에게 메롱(데뷔곡)
+            "https://youtu.be/L1KBaVHAdS8?si=TE4_wkzcMk9RQdGQ" // 강지 내죽생
         ];
 
-        // 특별 링크(강지 내죽생)
-        const specialLink = "https://youtu.be/L1KBaVHAdS8?si=TE4_wkzcMk9RQdGQ";
-
-        // 0.05% 확률로 특별 링크 선택
-        const randomNumber = Math.random();
-        let selectedLink;
-
-        if (randomNumber < 0.0005) { // 0.05% 확률
-            selectedLink = specialLink;
-        } else {
-            // 나머지 99.95% 확률로 일반 링크 중 하나 선택
-            selectedLink = youtubeLinks[Math.floor(Math.random() * youtubeLinks.length)];
+        // 랜덤 영상 표시 함수
+        function showRandomVideo() {
+            // 랜덤 링크 선택
+            const randomLink = youtubeLinks[Math.floor(Math.random() * youtubeLinks.length)];
+            // iframe에 랜덤 영상 로드
+            document.getElementById('youtube-video').src = randomLink;
         }
 
-        // 3초 후 선택된 링크로 이동
-        setTimeout(() => {
-            window.location.href = selectedLink;
-        }, 3000);
+        // 초기 영상 로드 (3초 후)
+        setTimeout(showRandomVideo, 3000);
+
+        // 버튼 클릭 이벤트 추가
+        document.getElementById('randomize-button').addEventListener('click', showRandomVideo);
     </script>
 </body>
 </html>
