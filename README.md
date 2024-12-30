@@ -8,3 +8,5 @@ Add original, group, cover song / not add live cover
 
 오리지널, 그룹, 커버송이 포함되어있으며, 방송에서 라이브로 불렀던 음원들은 제외되어있습니다.
 오늘의 노래를 찾아볼까요?
+
+무언가 특별한 노래를 찾을 수 있을지도?
