@@ -760,14 +760,14 @@
         total += genMatchMap[key].syn.score;
       }
 
-      // === 히든 시너지 로직 추가 (졸업자 4명 이상) ===
+      // === 히든 시너지 로직 추가 (졸업자 5명) ===
       const gradMembers = drawn.filter(t => t.graduated);
-      if (gradMembers.length >= 4) {
+      if (gradMembers.length = 5) {
         achieved.push({
           syn: { id: "syn_hidden_grad", name: "영원한 기억 ✨", type: "hidden", count: 4, score: 10000 },
           members: gradMembers
         });
-        total += 10000;
+        total += 44444;
       }
       
       return { achieved, total };
