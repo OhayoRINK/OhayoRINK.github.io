@@ -762,7 +762,7 @@
 
       // === 히든 시너지 로직 추가 (졸업자 5명) ===
       const gradMembers = drawn.filter(t => t.graduated);
-      if (gradMembers.length => 5) {
+      if (gradMembers.length >= 5) {
         achieved.push({
           syn: { id: "syn_hidden_grad", name: "영원한 기억 ✨", type: "hidden", count: 4, score: 10000 },
           members: gradMembers
