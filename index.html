@@ -92,6 +92,8 @@
       display: flex;
       gap: 12px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     button {
@@ -121,6 +123,18 @@
     }
 
     .btn-challenge:disabled { filter: grayscale(0.6); cursor: not-allowed; }
+
+    .btn-best {
+      background: #2a2a4a;
+      color: #ffd700;
+      font-size: 0.85rem;
+      padding: 13px 20px;
+    }
+    .btn-best:disabled {
+      color: #555;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
 
     #cards {
       display: flex;
@@ -242,7 +256,7 @@
     .score-box .s-right { font-size: 0.8rem; color: #666; text-align: right; line-height: 1.6; }
 
     .syn-achieved { margin-bottom: 6px; }
-    .syn-achieved-title { font-size: 0.72rem; color: #888; margin-bottom: 6px; padding-left: 2px; }
+    .syn-achieved-title { font-size: 0.72rem; color: #888; margin-bottom: 6px; padding-left: 2px; text-align: left; }
     
     .syn-chip {
       display: inline-flex;
@@ -257,7 +271,6 @@
       animation: fadeIn 0.4s ease both;
     }
 
-    /* 티어별 칩 효과 추가 */
     .syn-chip.gold { border-color: var(--gold); box-shadow: 0 0 8px #ffd70033; }
     .syn-chip.region { border-color: #4dd9ff; background: linear-gradient(135deg, #0d2b40, #15456b); }
     
@@ -275,7 +288,6 @@
       color: #ccffff;
     }
 
-    /* 🔥 잭팟 이펙트 (기수 완성 & 5인 유닛 전용) 🔥 */
     .syn-chip.jackpot { 
       background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
       background-size: 400% 400%;
@@ -293,7 +305,6 @@
       100%{background-position:0% 50%}
     }
 
-    /* 히든 시너지 이펙트 */
     .syn-chip.hidden { border-color: #ffffff; background: linear-gradient(135deg, #222, #555); box-shadow: 0 0 12px #ffffffaa; color: #fff; }
     
     .syn-chip .sc-pts { color: var(--gold); font-weight: 700; margin-left: 4px; }
@@ -351,6 +362,69 @@
     .syn-row .sr-pts { font-size: 0.78rem; color: var(--gold); min-width: 50px; text-align: right; }
     .syn-row .sr-cnt { font-size: 0.65rem; color: #555; min-width: 30px; text-align: center; }
     .group-label { font-size: 0.68rem; color: #444; margin: 10px 0 4px; padding-left: 2px; }
+
+    #best-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+    
+    .modal-content {
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      max-width: 520px;
+      width: 90%;
+      max-height: 90vh;      /* 모바일에서 팝업이 너무 커지는 것을 방지 */
+      overflow-y: auto;      /* 시너지가 많을 때 스크롤 가능하게 함 */
+      box-shadow: 0 0 30px rgba(123, 94, 167, 0.5);
+    }
+
+    .modal-title { 
+      font-size: 1.3rem; 
+      color: var(--gold); 
+      margin-bottom: 20px; 
+      font-weight: bold;
+    }
+
+    .modal-cards { 
+      display: flex; 
+      gap: 10px; 
+      justify-content: center; 
+      flex-wrap: wrap; 
+      margin-bottom: 20px; 
+    }
+
+    .btn-close { 
+      background: #333; 
+      color: #fff; 
+      padding: 10px 30px; 
+      border-radius: 8px; 
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: filter 0.15s, transform 0.1s;
+      margin-top: 10px;
+    }
+    .btn-close:hover { filter: brightness(1.2); }
+    .btn-close:active { transform: scale(0.96); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* 스크롤바 커스텀 (모달 내부) */
+    .modal-content::-webkit-scrollbar { width: 6px; }
+    .modal-content::-webkit-scrollbar-track { background: #13132b; border-radius: 10px; }
+    .modal-content::-webkit-scrollbar-thumb { background: #7b5ea7; border-radius: 10px; }
   </style>
 </head>
 <body>
@@ -366,12 +440,13 @@
     <div class="rec"><div class="v" id="best-syn">-</div><div class="l">최고 시너지</div></div>
   </div>
 
+  <div id="cards"></div>
+
   <div class="btn-area">
     <button class="btn-challenge" id="btn-challenge" onclick="doChallenge()">도전!</button>
     <button class="btn-reset" onclick="doReset()">초기화</button>
+    <button class="btn-best" id="btn-best" onclick="showBestRecord()" disabled>최고 기록 보기</button>
   </div>
-
-  <div id="cards"></div>
 
   <div id="result-panel">
     <div class="score-box">
@@ -393,6 +468,20 @@
       <span class="toggle-icon closed" id="syn-toggle-icon">▼</span>
     </div>
     <div id="syn-table"></div>
+  </div>
+
+  <div id="best-modal">
+    <div class="modal-content">
+      <div class="modal-title">🏆 최고 점수 조합 (<span id="modal-best-score">0</span>점)</div>
+      <div class="modal-cards" id="modal-cards"></div>
+      
+      <div class="syn-achieved" style="margin-bottom: 20px; text-align: center;">
+        <div class="syn-achieved-title" style="text-align: center;">✨ 당시 발동한 시너지</div>
+        <div id="modal-syn-chips"></div>
+      </div>
+
+      <button class="btn-close" onclick="closeBestRecord()">닫기</button>
+    </div>
   </div>
 
   <script>
@@ -506,12 +595,12 @@
     ];
 
     const SYNERGIES = [
-      // 국가별 시너지 (Region) - 발동 확률이 높아 점수 하향
+      // 국가별 시너지 (Region)
       { id: "syn_reg_jp", name: "JP의 결속", type: "region", required_region: "JP", count: 4, score: 200 },
       { id: "syn_reg_en", name: "EN의 모임", type: "region", required_region: "EN", count: 3, score: 300 },
       { id: "syn_reg_id", name: "ID의 유대", type: "region", required_region: "ID", count: 2, score: 300 },
 
-      // JP 기수 시너지 (확률 비례 점수 대폭 상향)
+      // JP 기수 시너지
       { id: "syn_gen0_3", name: "0기생 모임", type: "gen", required_gen: 0, count: 3, score: 1500 },
       { id: "syn_gen0_4", name: "0기생 집결", type: "gen", required_gen: 0, count: 4, score: 15000 },
       { id: "syn_gen0_5", name: "0기생 완성", type: "gen", required_gen: 0, count: 5, score: 999999, jackpot: true },
@@ -547,7 +636,7 @@
       // EN 기수 시너지
       { id: "syn_en_myth_3", name: "Myth 모임 🔎", type: "gen", required_gen: "en_myth", count: 3, score: 1500 },
       { id: "syn_en_myth_4", name: "Myth 집결 🔎", type: "gen", required_gen: "en_myth", count: 4, score: 15000 },
-      { id: "syn_en_myth_5", name: "Myth 완성 🔎", type: "gen", required_gen: "en_myth", count: 5, score: 999999, jackpot: true },
+      { id: "syn_en_myth_5", name: "Myth 완성 🔎", type: "gen", required_gen: "en_myth", count: 5, score: 77777, jackpot: true },
       { id: "syn_en_promise_3", name: "Promise 모임 💎", type: "gen", required_gen: "en_promise", count: 3, score: 1500 },
       { id: "syn_en_promise_4", name: "Promise 집결 💎", type: "gen", required_gen: "en_promise", count: 4, score: 15000 },
       { id: "syn_en_promise_5", name: "Promise 완성 💎", type: "gen", required_gen: "en_promise", count: 5, score: 999999, jackpot: true },
@@ -558,12 +647,11 @@
       { id: "syn_en_justice_4", name: "Justice 완성 ⚖️", type: "gen", required_gen: "en_justice", count: 4, score: 77777, jackpot: true },
 
       // ID 기수 시너지
-      { id: "syn_id_gen1", name: "Area 15 완성 👽", type: "gen", required_gen: "id_gen1", count: 3, score: 33333, jackpot: true },
-      { id: "syn_id_gen2", name: "Holoro 완성 🦚", type: "gen", required_gen: "id_gen2", count: 3, score: 33333, jackpot: true },
-      { id: "syn_id_gen3", name: "HoloH3ro 완성 ☔", type: "gen", required_gen: "id_gen3", count: 3, score: 33333, jackpot: true },
+      { id: "syn_id_gen1", name: "Area 15 완성 👽", type: "gen", required_gen: "id_gen1", count: 3, score: 11111, jackpot: true },
+      { id: "syn_id_gen2", name: "Holoro 완성 🦚", type: "gen", required_gen: "id_gen2", count: 3, score: 11111, jackpot: true },
+      { id: "syn_id_gen3", name: "HoloH3ro 완성 ☔", type: "gen", required_gen: "id_gen3", count: 3, score: 11111, jackpot: true },
 
       // === 유닛 및 페어 시너지 ===
-      
       // JP 페어 (2인)
       { id: "syn_소라로보", name: "소라로보 👾", type: "unit", req_members: ["sora", "roboco"], count: 2, score: 600 },
       { id: "syn_SorAZ", name: "SorAZ 🌟🎵", type: "unit", req_members: ["sora", "azki"], count: 2, score: 600 },
@@ -646,7 +734,8 @@
       { id: "syn_페코무나", name: "페코무나 🐰🔮", type: "unit", req_members: ["pekora", "moona"], count: 2, score: 750 },
       { id: "syn_코보키아라", name: "엄마와 딸 🐔☔", type: "unit", req_members: ["kiara", "kobo"], count: 2, score: 650 },
 
-      // 다인큐/대형 유닛 (3인 이상) - 극악 확률 반영 점수 떡상
+      // 다인큐/대형 유닛 (3인 이상)
+      { id: "syn_holokr", name: "HoloKR...?", type: "unit", req_members: ["kanade", "kronii", "ina"], count: 3, score: 5000 },
       { id: "syn_만지구미", name: "만지구미 💧🔮👹", type: "unit", req_members: ["aqua", "shion", "ayame"], count: 3, score: 5000 },
       { id: "syn_Startend", name: "Startend ☄️💧😈", type: "unit", req_members: ["suisei", "aqua", "towa"], count: 3, score: 5000 },
       { id: "syn_아야후부미", name: "아야후부미 👹🦊🐺", type: "unit", req_members: ["ayame", "fubuki", "mio"], count: 3, score: 5000 },
@@ -671,6 +760,8 @@
     ];
 
     let tries = 0, bestScore = 0, bestSynName = '-';
+    let bestDrawn = []; // 최고 기록의 멤버 조합을 저장할 배열
+    let bestAchieved = []; // 최고 기록의 달성 시너지를 저장할 배열 추가
 
     function getRegion(t) {
       const g = t.gens[0];
@@ -726,7 +817,6 @@
         else if (r === 'ID') { idCount++; idMembers.push(t); }
       });
 
-      // === 시너지 리스트 순회 ===
       for (const syn of SYNERGIES) {
         if (syn.type === 'region') {
           if (syn.required_region === 'JP' && jpCount >= syn.count) { 
@@ -754,17 +844,15 @@
         }
       }
       
-      // 기수 시너지 합산
       for (const key in genMatchMap) {
         achieved.push(genMatchMap[key]);
         total += genMatchMap[key].syn.score;
       }
 
-      // === 히든 시너지 로직 추가 (졸업자 5명) ===
       const gradMembers = drawn.filter(t => t.graduated);
-      if (gradMembers.length >= 4) {
+      if (gradMembers.length >= 5) {
         achieved.push({
-          syn: { id: "syn_hidden_grad", name: "영원한 기억 ✨", type: "hidden", count: 4, score: 10000 },
+          syn: { id: "syn_hidden_grad", name: "영원한 기억 ✨", type: "hidden", count: 5, score: 20000 },
           members: gradMembers
         });
         total += 5000;
@@ -789,9 +877,13 @@
       const { achieved, total } = calcSynergies(drawn);
       tries++;
       
+      // 최고 점수 갱신 시 데이터 저장 및 버튼 활성화
       if (total > bestScore) {
         bestScore = total;
         bestSynName = achieved.length ? achieved.sort((a, b) => b.syn.score - a.syn.score)[0].syn.name : '없음';
+        bestDrawn = [...drawn];
+        bestAchieved = [...achieved]; // 최고 시너지 달성 목록 저장
+        document.getElementById('btn-best').disabled = false;
       }
 
       const cardsEl = document.getElementById('cards');
@@ -840,7 +932,6 @@
             const s = item.syn;
             const m = item.members;
             
-            // 칩 색상 및 스타일 결정
             let chipClass = '';
             if (s.jackpot) chipClass = 'jackpot';
             else if (s.type === 'region') chipClass = 'region';
@@ -849,7 +940,6 @@
             else if (s.score >= 1500) chipClass = 'platinum';
             else if (s.score >= 700) chipClass = 'gold';
 
-            // 발동시킨 멤버들의 이모지 렌더링
             const memberIcons = m.map(t => t.icon).join(''); 
 
             return `
@@ -873,6 +963,10 @@
       tries = 0;
       bestScore = 0;
       bestSynName = '-';
+      bestDrawn = []; // 최고 기록 배열 초기화
+      bestAchieved = []; // 달성 시너지 배열도 초기화
+      document.getElementById('btn-best').disabled = true; // 최고 기록 버튼 비활성화
+
       document.getElementById('cards').innerHTML = '';
       document.getElementById('result-panel').style.display = 'none';
       document.getElementById('try-count').textContent = '0';
@@ -954,6 +1048,68 @@
         idGenSyns.map(makeRow).join('') +
         `<div class="group-label">— DEV_IS 기수별 시너지 —</div>` +
         devisGenSyns.map(makeRow).join('');
+    }
+
+    // 최고 기록 보기 모달 열기
+    function showBestRecord() {
+      if (bestDrawn.length === 0) return;
+      
+      const cardsEl = document.getElementById('modal-cards');
+      cardsEl.innerHTML = '';
+      
+      // 모달 내 캐릭터 카드 렌더링
+      bestDrawn.forEach((t) => {
+        const d = document.createElement('div');
+        const gradClass = t.graduated ? ' graduated' : '';
+        d.className = `card ${genClass(t)}${gradClass}`;
+        const gradBadge = t.graduated ? `<div class="c-grad">졸업</div>` : '';
+        d.innerHTML = `
+          <div class="c-rar">${genLabel(t)}</div>
+          <span class="c-icon">${t.icon}</span>
+          <div class="c-name">${t.name_kr}</div>
+          ${gradBadge}
+        `;
+        cardsEl.appendChild(d);
+      });
+
+      document.getElementById('modal-best-score').textContent = bestScore.toLocaleString();
+
+      // 모달 내 달성 시너지 칩 렌더링 추가
+      const modalChipsEl = document.getElementById('modal-syn-chips');
+      if (!bestAchieved.length) {
+        modalChipsEl.innerHTML = '<div class="no-syn">달성한 시너지가 없습니다.</div>';
+      } else {
+        modalChipsEl.innerHTML = bestAchieved
+          .sort((a, b) => b.syn.score - a.syn.score)
+          .map((item, i) => {
+            const s = item.syn;
+            const m = item.members;
+            
+            let chipClass = '';
+            if (s.jackpot) chipClass = 'jackpot';
+            else if (s.type === 'region') chipClass = 'region';
+            else if (s.type === 'hidden') chipClass = 'hidden'; 
+            else if (s.score >= 30000) chipClass = 'diamond';
+            else if (s.score >= 1500) chipClass = 'platinum';
+            else if (s.score >= 700) chipClass = 'gold';
+
+            const memberIcons = m.map(t => t.icon).join(''); 
+
+            return `
+              <span class="syn-chip ${chipClass}" style="animation-delay:${i * 60}ms">
+                ${s.name} <span class="sc-pts">+${s.score.toLocaleString()}</span>
+                <span class="sc-members">${memberIcons}</span>
+              </span>
+            `;
+          }).join('');
+      }
+
+      document.getElementById('best-modal').style.display = 'flex';
+    }
+
+    // 최고 기록 보기 모달 닫기
+    function closeBestRecord() {
+      document.getElementById('best-modal').style.display = 'none';
     }
 
     renderSynTable([]);
