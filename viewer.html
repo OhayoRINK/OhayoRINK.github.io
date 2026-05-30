@@ -1,1 +1,189 @@
-<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>README Viewer</title><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css'><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css'><style>body{background:#0d1117;margin:0;padding:40px;color:white;font-family:sans-serif}.markdown-body{max-width:1000px;margin:0 auto;background:#161b22;padding:45px;border-radius:18px;border:1px solid rgba(255,255,255,0.08)}</style></head><body><article class='markdown-body' id='content'>Loading README...</article><script src='https://cdn.jsdelivr.net/npm/marked/marked.min.js'></script><script src='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js'></script><script>const params=new URLSearchParams(window.location.search);const file=params.get('file');fetch(file).then(response=>response.text()).then(markdown=>{document.getElementById('content').innerHTML=marked.parse(markdown);document.querySelectorAll('pre code').forEach((el)=>{hljs.highlightElement(el);});}).catch(err=>{document.getElementById('content').innerHTML=`<h2>Failed to load README</h2><p>${err}</p>`;});</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0" />
+
+<title>README Viewer</title>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css"
+/>
+
+<link
+id="hljs-theme"
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+
+<style>
+
+:root {
+
+--bg: #f6f8fa;
+--card: #ffffff;
+--text: #24292f;
+--border: #d0d7de;
+
+}
+
+.dark-mode {
+
+--bg: #0d1117;
+--card: #161b22;
+--text: #e6edf3;
+--border: rgba(255,255,255,0.08);
+
+}
+
+body {
+
+background: var(--bg);
+
+margin: 0;
+
+padding: 40px;
+
+color: var(--text);
+
+font-family: sans-serif;
+
+transition: 0.3s ease;
+
+}
+
+.markdown-body {
+
+max-width: 1000px;
+
+margin: 0 auto;
+
+background: var(--card);
+
+padding: 45px;
+
+border-radius: 18px;
+
+border: 1px solid var(--border);
+
+}
+
+.theme-toggle {
+
+position: fixed;
+
+top: 24px;
+right: 24px;
+
+border: none;
+
+padding: 12px 18px;
+
+border-radius: 14px;
+
+cursor: pointer;
+
+background: var(--card);
+
+color: var(--text);
+
+border: 1px solid var(--border);
+
+}
+
+@media (max-width: 767px) {
+
+body {
+padding: 16px;
+}
+
+.markdown-body {
+padding: 20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<button id="themeToggle"
+class="theme-toggle">
+
+🌙 Dark Mode
+
+</button>
+
+<article class="markdown-body" id="content">
+
+Loading README...
+
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<script>
+
+const params =
+new URLSearchParams(window.location.search);
+
+const file = params.get("file");
+
+fetch(file)
+
+.then(response => response.text())
+
+.then(markdown => {
+
+document.getElementById("content").innerHTML =
+marked.parse(markdown);
+
+document.querySelectorAll('pre code').forEach((el) => {
+
+hljs.highlightElement(el);
+
+});
+
+});
+
+const toggleBtn =
+document.getElementById("themeToggle");
+
+const themeLink =
+document.getElementById("hljs-theme");
+
+toggleBtn.addEventListener("click", () => {
+
+document.body.classList.toggle("dark-mode");
+
+if(document.body.classList.contains("dark-mode")) {
+
+toggleBtn.innerHTML = "☀️ Light Mode";
+
+themeLink.href =
+"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css";
+
+} else {
+
+toggleBtn.innerHTML = "🌙 Dark Mode";
+
+themeLink.href =
+"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css";
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
