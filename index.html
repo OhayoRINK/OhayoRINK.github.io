@@ -1,1122 +1,211 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>홀로라이브 챌린지</title>
-  <style>
-    :root {
-      --bg: #0a0a1a;
-      --panel: #13132b;
-      --accent: #7b5ea7;
-      --gold: #ffd700;
-      --text: #eee;
-      --gen0: #ffd700;
-      --gen1: #ff6b9d;
-      --gamers: #5dcc6a;
-      --gen2: #66ccff;
-      --gen3: #cc99ff;
-      --gen4: #ffaa44;
-      --gen5: #87ceeb;
-      --gen6: #ff6b9d;
-      --regloss: #4dd9ff;
-      --flowglow: #ffaa33;
-      
-      /* EN 테마 컬러 */
-      --en_myth: #a0a0d0;
-      --en_promise: #f0e68c;
-      --en_advent: #9370db;
-      --en_justice: #ff7f50;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      /* ID 테마 컬러 */
-      --id_gen1: #ff4d4d;
-      --id_gen2: #4da6ff;
-      --id_gen3: #4dff4d;
-    }
+  <title>CSI Compression Research</title>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 0 40px;
-    }
-
-    header {
-      width: 100%;
-      max-width: 520px;
-      text-align: center;
-      padding: 24px 16px 10px;
-    }
-
-    header h1 {
-      font-size: 1.6rem;
-      color: #d4a0ff;
-      text-shadow: 0 0 20px #a05fff99;
-      letter-spacing: 2px;
-    }
-
-    header p {
-      font-size: 0.8rem;
-      color: #666;
-      margin-top: 4px;
-    }
-
-    .record-bar {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 8px 16px;
-      background: var(--panel);
-      border-radius: 10px;
-      margin: 0 16px 18px;
-      width: 100%;
-      max-width: 520px;
-    }
-
-    .rec { text-align: center; }
-    .rec .v { font-size: 1.1rem; font-weight: 700; color: #d4a0ff; }
-    .rec .l { font-size: 0.65rem; color: #666; margin-top: 1px; }
-
-    .btn-area {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    button {
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: filter 0.15s, transform 0.1s;
-    }
-
-    button:hover { filter: brightness(1.2); }
-    button:active { transform: scale(0.96); }
-
-    .btn-challenge {
-      background: linear-gradient(135deg, #8a4aee, #d090ff);
-      color: #fff;
-      font-size: 1.1rem;
-      padding: 13px 36px;
-      box-shadow: 0 4px 20px #8a4aee66;
-    }
-
-    .btn-reset {
-      background: #1e1e38;
-      color: #777;
-      font-size: 0.85rem;
-      padding: 13px 20px;
-    }
-
-    .btn-challenge:disabled { filter: grayscale(0.6); cursor: not-allowed; }
-
-    .btn-best {
-      background: #2a2a4a;
-      color: #ffd700;
-      font-size: 0.85rem;
-      padding: 13px 20px;
-    }
-    .btn-best:disabled {
-      color: #555;
-      cursor: not-allowed;
-      filter: grayscale(1);
-    }
-
-    #cards {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-      min-height: 160px;
-      margin: 0 12px 20px;
-      width: 100%;
-      max-width: 520px;
-    }
-
-    /* 🔥 핵심 수정 부분: 카드 높이 고정 및 배지 절대 위치 세팅 🔥 */
-    .card {
-      width: 88px;
-      height: 125px; /* 높이를 고정하여 버튼이 밀리는 현상 방지 */
-      position: relative; /* 배지를 하단에 고정하기 위해 기준점 설정 */
-      border-radius: 12px;
-      overflow: hidden;
-      text-align: center;
-      background: var(--panel);
-      border: 2px solid #2a2a4a;
-      animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.3) rotate(-15deg); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .card .c-rar {
-      font-size: 0.55rem;
-      font-weight: 700;
-      padding: 4px 0 0;
-      letter-spacing: 1px;
-    }
-
-    .card .c-icon {
-      font-size: 2.4rem;
-      padding: 6px 0 2px;
-      display: block;
-    }
-
-    .card .c-name {
-      font-size: 0.58rem;
-      padding: 2px 4px 4px; /* 기존보다 하단 여백을 살짝 줄임 */
-      line-height: 1.3;
-      color: #ccc;
-      word-break: keep-all;
-    }
-
-    /* 🔥 졸업 배지 스타일 수정 🔥 */
-    .c-grad {
-      position: absolute; /* 카드 내부 하단에 공중에 띄움 */
-      bottom: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.48rem;
-      color: #888;
-      background: #222;
-      border-radius: 3px;
-      padding: 1px 4px;
-      margin: 0;
-      display: inline-block;
-      letter-spacing: 0.5px;
-      white-space: nowrap; /* 글씨가 찌그러지지 않게 방지 */
-    }
-
-    .card.graduated { opacity: 0.75; filter: saturate(0.5); }
-
-    /* 기수별 카드 색상 */
-    .card.gen0 { border-color: #ffd700; background: #1e1400; box-shadow: 0 0 14px #ffd70055; }
-    .card.gen0 .c-rar { color: var(--gen0); }
-    .card.gen1 { border-color: #ff6b9d; }
-    .card.gen1 .c-rar { color: var(--gen1); }
-    .card.gamers { border-color: #5dcc6a; background: #0d1a0d; }
-    .card.gamers .c-rar { color: var(--gamers); }
-    .card.gen2 { border-color: #3a6a8a; }
-    .card.gen2 .c-rar { color: var(--gen2); }
-    .card.gen3 { border-color: #7a3aaa; background: #180d2a; }
-    .card.gen3 .c-rar { color: var(--gen3); }
-    .card.gen4 { border-color: #cc7722; }
-    .card.gen4 .c-rar { color: var(--gen4); }
-    .card.gen5 { border-color: #4488aa; }
-    .card.gen5 .c-rar { color: var(--gen5); }
-    .card.gen6 { border-color: #cc3366; background: #1a0010; box-shadow: 0 0 14px #cc336655; }
-    .card.gen6 .c-rar { color: #ff80aa; }
-    .card.regloss { border-color: #4dd9ff; background: #001a22; box-shadow: 0 0 14px #4dd9ff44; }
-    .card.regloss .c-rar { color: var(--regloss); }
-    .card.flowglow { border-color: #ffaa33; background: #1e1200; box-shadow: 0 0 14px #ffaa3344; }
-    .card.flowglow .c-rar { color: var(--flowglow); }
-
-    .card.en_myth { border-color: var(--en_myth); background: #151525; box-shadow: 0 0 14px #a0a0d044; }
-    .card.en_myth .c-rar { color: var(--en_myth); }
-    .card.en_promise { border-color: var(--en_promise); background: #202010; box-shadow: 0 0 14px #f0e68c44; }
-    .card.en_promise .c-rar { color: var(--en_promise); }
-    .card.en_advent { border-color: var(--en_advent); background: #1a0a2a; box-shadow: 0 0 14px #9370db44; }
-    .card.en_advent .c-rar { color: var(--en_advent); }
-    .card.en_justice { border-color: var(--en_justice); background: #2a1005; box-shadow: 0 0 14px #ff7f5044; }
-    .card.en_justice .c-rar { color: var(--en_justice); }
-
-    .card.id_gen1 { border-color: var(--id_gen1); background: #1a0505; box-shadow: 0 0 14px #ff4d4d44; }
-    .card.id_gen1 .c-rar { color: var(--id_gen1); }
-    .card.id_gen2 { border-color: var(--id_gen2); background: #05101a; box-shadow: 0 0 14px #4da6ff44; }
-    .card.id_gen2 .c-rar { color: var(--id_gen2); }
-    .card.id_gen3 { border-color: var(--id_gen3); background: #051a05; box-shadow: 0 0 14px #4dff4d44; }
-    .card.id_gen3 .c-rar { color: var(--id_gen3); }
-
-    #result-panel {
-      width: 100%;
-      max-width: 520px;
-      margin: 0 12px 20px;
-      display: none;
-    }
-
-    .score-box {
-      background: var(--panel);
-      border-radius: 12px;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .score-box .s-left .s-label { font-size: 0.75rem; color: #888; }
-    .score-box .s-left .s-val { font-size: 2rem; font-weight: 700; color: var(--gold); }
-    .score-box .s-right { font-size: 0.8rem; color: #666; text-align: right; line-height: 1.6; }
-
-    .syn-achieved { margin-bottom: 6px; }
-    .syn-achieved-title { font-size: 0.72rem; color: #888; margin-bottom: 6px; padding-left: 2px; text-align: left; }
-    
-    .syn-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, #2a1545, #0d2040);
-      border: 1px solid #6a4a9a;
-      border-radius: 8px;
-      padding: 6px 12px;
-      margin: 3px;
-      font-size: 0.8rem;
-      animation: fadeIn 0.4s ease both;
-    }
-
-    .syn-chip.gold { border-color: var(--gold); box-shadow: 0 0 8px #ffd70033; }
-    .syn-chip.region { border-color: #4dd9ff; background: linear-gradient(135deg, #0d2b40, #15456b); }
-    
-    .syn-chip.platinum {
-      border-color: #e5e4e2;
-      background: linear-gradient(135deg, #222, #444);
-      box-shadow: 0 0 8px #e5e4e266;
-      color: #fff;
-    }
-    
-    .syn-chip.diamond {
-      border-color: #00ffff;
-      background: linear-gradient(135deg, #002244, #005577);
-      box-shadow: 0 0 10px #00ffff88;
-      color: #ccffff;
-    }
-
-    .syn-chip.jackpot { 
-      background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-      background-size: 400% 400%;
-      animation: rainbowGlow 2.5s linear infinite, popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      border: 2px solid #fff;
-      color: #fff;
-      font-weight: 900;
-      box-shadow: 0 0 15px #ffffffaa, inset 0 0 10px #ffffffaa;
-      text-shadow: 0 0 5px #000;
-      transform: scale(1.05);
-    }
-    @keyframes rainbowGlow {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-    }
-
-    .syn-chip.hidden { border-color: #ffffff; background: linear-gradient(135deg, #222, #555); box-shadow: 0 0 12px #ffffffaa; color: #fff; }
-    
-    .syn-chip .sc-pts { color: var(--gold); font-weight: 700; margin-left: 4px; }
-    .syn-chip.hidden .sc-pts { color: #fff; text-shadow: 0 0 4px #fff; }
-    .syn-chip.platinum .sc-pts { color: #e5e4e2; }
-    .syn-chip.diamond .sc-pts { color: #00ffff; }
-    .syn-chip.jackpot .sc-pts { color: #ffd700; text-shadow: 0 0 5px #000; }
-    
-    .syn-chip .sc-members { font-size: 0.75rem; letter-spacing: 2px; margin-left: 4px; border-left: 1px solid #ffffff44; padding-left: 8px;}
-
-    .no-syn { font-size: 0.8rem; color: #555; padding: 10px 2px; font-style: italic; }
-
-    #syn-table-section { width: 100%; max-width: 520px; margin: 0 12px; }
-    
-    .toggle-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: #1e1e38;
-      color: #eee;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 0 auto 12px;
-      width: 100%;
-      border: 1px solid #2a2a4a;
-      transition: all 0.2s;
-      user-select: none;
-    }
-    .toggle-btn:hover { background: #2a2a4a; border-color: #4a4a6a; }
-    .toggle-icon { font-size: 0.7rem; transition: transform 0.2s; }
-    .toggle-icon.closed { transform: rotate(-90deg); }
-    
-    #syn-table {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .syn-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--panel);
-      border-radius: 8px;
-      padding: 7px 10px;
-      margin-bottom: 4px;
-      border: 1px solid #1e1e38;
-    }
-
-    .syn-row .sr-name { flex: 1; font-size: 0.78rem; font-weight: 600; color: #c9a0ff; }
-    .syn-row .sr-members { font-size: 0.65rem; color: #666; flex: 2; }
-    .syn-row .sr-pts { font-size: 0.78rem; color: var(--gold); min-width: 50px; text-align: right; }
-    .syn-row .sr-cnt { font-size: 0.65rem; color: #555; min-width: 30px; text-align: center; }
-    .group-label { font-size: 0.68rem; color: #444; margin: 10px 0 4px; padding-left: 2px; }
-
-    #best-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn 0.2s ease;
-    }
-    
-    .modal-content {
-      background: var(--bg);
-      border: 2px solid var(--accent);
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
-      max-width: 520px;
-      width: 90%;
-      max-height: 90vh;      
-      overflow-y: auto;      
-      box-shadow: 0 0 30px rgba(123, 94, 167, 0.5);
-    }
-
-    .modal-title { 
-      font-size: 1.3rem; 
-      color: var(--gold); 
-      margin-bottom: 20px; 
-      font-weight: bold;
-    }
-
-    .modal-cards { 
-      display: flex; 
-      gap: 10px; 
-      justify-content: center; 
-      flex-wrap: wrap; 
-      margin-bottom: 20px; 
-    }
-
-    .btn-close { 
-      background: #333; 
-      color: #fff; 
-      padding: 10px 30px; 
-      border-radius: 8px; 
-      font-size: 1rem;
-      cursor: pointer;
-      border: none;
-      transition: filter 0.15s, transform 0.1s;
-      margin-top: 10px;
-    }
-    .btn-close:hover { filter: brightness(1.2); }
-    .btn-close:active { transform: scale(0.96); }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    /* 스크롤바 커스텀 (모달 내부) */
-    .modal-content::-webkit-scrollbar { width: 6px; }
-    .modal-content::-webkit-scrollbar-track { background: #13132b; border-radius: 10px; }
-    .modal-content::-webkit-scrollbar-thumb { background: #7b5ea7; border-radius: 10px; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <header>
-    <h1>홀로라이브 챌린지</h1>
-    <p>랜덤 뽑기로 도전하는 최고점수!</p>
-  </header>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
 
-  <div class="record-bar">
-    <div class="rec"><div class="v" id="try-count">0</div><div class="l">도전 횟수</div></div>
-    <div class="rec"><div class="v" id="best-score">0</div><div class="l">최고 점수</div></div>
-    <div class="rec"><div class="v" id="best-syn">-</div><div class="l">최고 시너지</div></div>
-  </div>
+      <h1>
+        Massive MIMO CSI Feedback Compression
+      </h1>
 
-  <div id="cards"></div>
+      <p>
+        Deep Learning-based CSI Compression Research Projects
+        for FDD Massive MIMO Systems
+      </p>
 
-  <div class="btn-area">
-    <button class="btn-challenge" id="btn-challenge" onclick="doChallenge()">도전!</button>
-    <button class="btn-reset" onclick="doReset()">초기화</button>
-    <button class="btn-best" id="btn-best" onclick="showBestRecord()" disabled>최고 기록 보기</button>
-  </div>
-
-  <div id="result-panel">
-    <div class="score-box">
-      <div class="s-left">
-        <div class="s-label">이번 점수</div>
-        <div class="s-val" id="cur-score">0</div>
-      </div>
-      <div class="s-right" id="score-comment"></div>
-    </div>
-    <div class="syn-achieved">
-      <div class="syn-achieved-title">✨ 달성한 시너지</div>
-      <div id="syn-chips"></div>
-    </div>
-  </div>
-
-  <div id="syn-table-section">
-    <div class="toggle-btn" onclick="toggleTable()">
-      <span id="syn-toggle-text">시너지 일람 열기</span>
-      <span class="toggle-icon closed" id="syn-toggle-icon">▼</span>
-    </div>
-    <div id="syn-table"></div>
-  </div>
-
-  <div id="best-modal">
-    <div class="modal-content">
-      <div class="modal-title">🏆 최고 점수 조합 (<span id="modal-best-score">0</span>점)</div>
-      <div class="modal-cards" id="modal-cards"></div>
-      
-      <div class="syn-achieved" style="margin-bottom: 20px; text-align: center;">
-        <div class="syn-achieved-title" style="text-align: center;">✨ 당시 발동한 시너지</div>
-        <div id="modal-syn-chips"></div>
+      <div class="hero-buttons">
+        <a href="#projects">View Projects</a>
       </div>
 
-      <button class="btn-close" onclick="closeBestRecord()">닫기</button>
     </div>
-  </div>
+  </section>
 
-  <script>
-    const TALENTS = [
-      // JP 0
-      { id: "sora", name_kr: "토키노 소라", gens: [0], active: true, icon: "🌟" },
-      { id: "roboco", name_kr: "로보코", gens: [0], active: true, icon: "🤖" },
-      { id: "azki", name_kr: "아즈키", gens: [0], active: true, icon: "🎵" },
-      { id: "miko", name_kr: "사쿠라 미코", gens: [0], active: true, icon: "🌸" },
-      { id: "suisei", name_kr: "호시마치 스이세이", gens: [0], active: true, icon: "☄️" },
+  <!-- TIMELINE -->
+  <section class="timeline">
 
-      // JP 1
-      { id: "mel", name_kr: "요조라 멜", gens: [1], active: true, graduated: true, icon: "🦇" },
-      { id: "aki", name_kr: "아키 로젠탈", gens: [1], active: true, icon: "🌺" },
-      { id: "haato", name_kr: "아카이 하아토", gens: [1], active: true, icon: "❤️" },
-      { id: "fubuki", name_kr: "시라카미 후부키", gens: [1, "gamers"], active: true, icon: "🦊" },
-      { id: "matsuri", name_kr: "나츠이로 마츠리", gens: [1], active: true, icon: "🎆" },
+    <h2>Research Evolution</h2>
 
-      // JP GAMERS
-      { id: "mio", name_kr: "오오카미 미오", gens: ["gamers"], active: true, icon: "🐺" },
-      { id: "okayu", name_kr: "네코마타 오카유", gens: ["gamers"], active: true, icon: "🐱" },
-      { id: "korone", name_kr: "이누가미 코로네", gens: ["gamers"], active: true, icon: "🐶" },
+    <div class="timeline-container">
 
-      // JP 2
-      { id: "aqua", name_kr: "미나토 아쿠아", gens: [2], active: true, graduated: true, icon: "💧" },
-      { id: "shion", name_kr: "무라사키 시온", gens: [2], active: true, graduated: true, icon: "🔮" },
-      { id: "ayame", name_kr: "나키리 아야메", gens: [2], active: true, icon: "👹" },
-      { id: "choco", name_kr: "유즈키 초코", gens: [2], active: true, icon: "🍫" },
-      { id: "subaru", name_kr: "오오조라 스바루", gens: [2], active: true, icon: "🦆" },
+      <div class="timeline-item">
+        <h3>PekoraNet 🐇</h3>
+        <p>Hierarchical CNN Compression</p>
+      </div>
 
-      // JP 3
-      { id: "pekora", name_kr: "우사다 페코라", gens: [3], active: true, icon: "🐰" },
-      { id: "flare", name_kr: "시라누이 플레어", gens: [3], active: true, icon: "🔥" },
-      { id: "noel", name_kr: "시로가네 노엘", gens: [3], active: true, icon: "⚔️" },
-      { id: "marine", name_kr: "호쇼 마린", gens: [3], active: true, icon: "⚓" },
-      { id: "rushia", name_kr: "우루하 루시아", gens: [3], active: true, graduated: true, icon: "🦋" },
+      <div class="timeline-arrow">↓</div>
 
-      // JP 4
-      { id: "kanata", name_kr: "아마네 카나타", gens: [4], active: true, graduated: true, icon: "😇" },
-      { id: "watame", name_kr: "츠노마키 와타메", gens: [4], active: true, icon: "🐑" },
-      { id: "towa", name_kr: "토코야미 토와", gens: [4], active: true, icon: "😈" },
-      { id: "luna", name_kr: "히메모리 루나", gens: [4], active: true, icon: "🌙" },
-      { id: "coco", name_kr: "키류 코코", gens: [4], active: true, graduated: true, icon: "🐉" },
+      <div class="timeline-item">
+        <h3>DPAS-CsiNet</h3>
+        <p>Spectral-domain Refinement</p>
+      </div>
 
-      // JP 5
-      { id: "lamy", name_kr: "유키하나 라미", gens: [5], active: true, icon: "❄️" },
-      { id: "nene", name_kr: "모모스즈 네네", gens: [5], active: true, icon: "🌸" },
-      { id: "botan", name_kr: "시시로 보탄", gens: [5], active: true, icon: "🦁" },
-      { id: "polka", name_kr: "오마루 폴카", gens: [5], active: true, icon: "🎪" },
-      { id: "aloe", name_kr: "마노 알로에", gens: [5], active: true, graduated: true, icon: "👾" },
+      <div class="timeline-arrow">↓</div>
 
-      // JP holoX
-      { id: "laplus", name_kr: "라프라스 다크니스", gens: ["holoX"], active: true, icon: "⚡" },
-      { id: "lui", name_kr: "타카네 루이", gens: ["holoX"], active: true, icon: "🦅" },
-      { id: "koyori", name_kr: "하쿠이 코요리", gens: ["holoX"], active: true, icon: "🧪" },
-      { id: "iroha", name_kr: "카자마 이로하", gens: ["holoX"], active: true, icon: "🌿" },
-      { id: "chloe", name_kr: "사카마타 클로에", gens: ["holoX"], active: true, graduated: true, icon: "🦭" },
+      <div class="timeline-item">
+        <h3>TowaNet 👾</h3>
+        <p>Topology-Oriented Reconstruction</p>
+      </div>
 
-      // DEV_IS Regloss
-      { id: "ao", name_kr: "히오도시 아오", gens: ["regloss"], active: true, graduated: true, icon: "🖊️" },
-      { id: "kanade", name_kr: "오토노세 카나데", gens: ["regloss"], active: true, icon: "🎹" },
-      { id: "ririka", name_kr: "이치조 리리카", gens: ["regloss"], active: true, icon: "🌆" },
-      { id: "raden", name_kr: "주우후테이 라덴", gens: ["regloss"], active: true, icon: "⛩️" },
-      { id: "hajime", name_kr: "토도로키 하지메", gens: ["regloss"], active: true, icon: "⚡" },
+    </div>
 
-      // DEV_IS FLOWGLOW
-      { id: "riona", name_kr: "이사키 리오나", gens: ["flowglow"], active: true, icon: "🎤" },
-      { id: "niko", name_kr: "코가네이 니코", gens: ["flowglow"], active: true, icon: "🐯" },
-      { id: "su", name_kr: "미즈미야 스우", gens: ["flowglow"], active: true, icon: "🌀" },
-      { id: "chihaya", name_kr: "린도 치하야", gens: ["flowglow"], active: true, icon: "🌸" },
-      { id: "vivi", name_kr: "키키라라 비비", gens: ["flowglow"], active: true, icon: "✨" },
+  </section>
 
-      // EN
-      { id: "calli", name_kr: "모리 칼리오페", gens: ["en_myth"], active: true, icon: "💀" },
-      { id: "kiara", name_kr: "타카나시 키아라", gens: ["en_myth"], active: true, icon: "🐔" },
-      { id: "ina", name_kr: "니노마에 이나니스", gens: ["en_myth"], active: true, icon: "🐙" },
-      { id: "gura", name_kr: "가우르 구라", gens: ["en_myth"], active: true, graduated: true, icon: "🦈" },
-      { id: "amelia", name_kr: "왓슨 아멜리아", gens: ["en_myth"], active: true, graduated: true, icon: "🔎" },
+  <!-- PROJECTS -->
+  <section class="projects" id="projects">
 
-      // EN PROMISE
-      { id: "irys", name_kr: "아이리스", gens: ["en_promise"], active: true, icon: "💎" },
-      { id: "sana", name_kr: "츠쿠모 사나", gens: ["en_promise"], active: true, graduated: true, icon: "🪐" },
-      { id: "fauna", name_kr: "세레스 파우나", gens: ["en_promise"], active: true, graduated: true, icon: "🌿" },
-      { id: "kronii", name_kr: "오로 크로니", gens: ["en_promise"], active: true, icon: "⏳" },
-      { id: "mumei", name_kr: "나나시 무메이", gens: ["en_promise"], active: true, graduated: true, icon: "🪶" },
-      { id: "baelz", name_kr: "하코스 벨즈", gens: ["en_promise"], active: true, icon: "🎲" },
+    <h2>Projects</h2>
 
-      // EN ADVENT
-      { id: "shiori", name_kr: "시오리 노벨라", gens: ["en_advent"], active: true, icon: "👁️" },
-      { id: "bijou", name_kr: "코세키 비쥬", gens: ["en_advent"], active: true, icon: "🗿" },
-      { id: "nerissa", name_kr: "네리사 레이븐크로프트", gens: ["en_advent"], active: true, icon: "🎼" },
-      { id: "fuwawa", name_kr: "후와와 어비스가드", gens: ["en_advent"], active: true, icon: "🩵" },
-      { id: "mococo", name_kr: "모코코 어비스가드", gens: ["en_advent"], active: true, icon: "🩷" },
+    <div class="project-grid">
 
-      // EN JUSTICE
-      { id: "elizabeth", name_kr: "엘리자베스 로즈", gens: ["en_justice"], active: true, icon: "🩸" },
-      { id: "gigi", name_kr: "지지 무린", gens: ["en_justice"], active: true, icon: "👊" },
-      { id: "cecilia", name_kr: "세실리아 이머그린", gens: ["en_justice"], active: true, icon: "🎻" },
-      { id: "raora", name_kr: "라오라 판테라", gens: ["en_justice"], active: true, icon: "🐾" },
+      <!-- PekoraNet -->
+      <div class="project-card">
 
-      // ID 
-      { id: "risu", name_kr: "아윤다 리스", gens: ["id_gen1"], active: true, icon: "🐿️" },
-      { id: "moona", name_kr: "무나 호시노바", gens: ["id_gen1"], active: true, icon: "🔮" },
-      { id: "iofi", name_kr: "아이라니 이오피프틴", gens: ["id_gen1"], active: true, icon: "🎨" },
-      { id: "ollie", name_kr: "쿠레이지 올리", gens: ["id_gen2"], active: true, icon: "🧟‍♀️" },
-      { id: "anya", name_kr: "아냐 멜핏사", gens: ["id_gen2"], active: true, icon: "🍂" },
-      { id: "reine", name_kr: "파볼리아 레이네", gens: ["id_gen2"], active: true, icon: "🦚" },
-      { id: "zeta", name_kr: "베스티아 제타", gens: ["id_gen3"], active: true, icon: "🕵️‍♀️" },
-      { id: "kaela", name_kr: "카엘라 코발스키아", gens: ["id_gen3"], active: true, icon: "🔨" },
-      { id: "kobo", name_kr: "코보 카나에루", gens: ["id_gen3"], active: true, icon: "☔" }
-    ];
+        <h3>PekoraNet 🐇</h3>
 
-    const SYNERGIES = [
-      // 국가별 시너지 (Region)
-      { id: "syn_reg_jp", name: "JP의 결속", type: "region", required_region: "JP", count: 4, score: 200 },
-      { id: "syn_reg_en", name: "EN의 모임", type: "region", required_region: "EN", count: 3, score: 300 },
-      { id: "syn_reg_id", name: "ID의 유대", type: "region", required_region: "ID", count: 2, score: 300 },
+        <p class="project-subtitle">
+          Lightweight Hierarchical CNN Framework
+        </p>
 
-      // JP 기수 시너지
-      { id: "syn_gen0_3", name: "0기생 모임", type: "gen", required_gen: 0, count: 3, score: 1500 },
-      { id: "syn_gen0_4", name: "0기생 집결", type: "gen", required_gen: 0, count: 4, score: 15000 },
-      { id: "syn_gen0_5", name: "0기생 완성", type: "gen", required_gen: 0, count: 5, score: 999999, jackpot: true },
-      { id: "syn_gen1_3", name: "1기생 모임", type: "gen", required_gen: 1, count: 3, score: 1500 },
-      { id: "syn_gen1_4", name: "1기생 집결", type: "gen", required_gen: 1, count: 4, score: 15000 },
-      { id: "syn_gen1_5", name: "1기생 완성", type: "gen", required_gen: 1, count: 5, score: 999999, jackpot: true },
-      { id: "syn_gen2_3", name: "2기생 모임", type: "gen", required_gen: 2, count: 3, score: 1500 },
-      { id: "syn_gen2_4", name: "2기생 집결", type: "gen", required_gen: 2, count: 4, score: 15000 },
-      { id: "syn_gen2_5", name: "2기생 완성", type: "gen", required_gen: 2, count: 5, score: 999999, jackpot: true },
-      { id: "syn_gen3_3", name: "Fantasy 모임", type: "gen", required_gen: 3, count: 3, score: 1500 },
-      { id: "syn_gen3_4", name: "Fantasy 집결", type: "gen", required_gen: 3, count: 4, score: 15000 },
-      { id: "syn_gen3_5", name: "Fantasy 완성", type: "gen", required_gen: 3, count: 5, score: 999999, jackpot: true },
-      { id: "syn_gen4_3", name: "holoForce 모임", type: "gen", required_gen: 4, count: 3, score: 1500 },
-      { id: "syn_gen4_4", name: "holoForce 집결", type: "gen", required_gen: 4, count: 4, score: 15000 },
-      { id: "syn_gen4_5", name: "holoForce 완성", type: "gen", required_gen: 4, count: 5, score: 999999, jackpot: true },
-      { id: "syn_gen5_3", name: "5기생 모임", type: "gen", required_gen: 5, count: 3, score: 1500 },
-      { id: "syn_gen5_4", name: "5기생 집결", type: "gen", required_gen: 5, count: 4, score: 15000 },
-      { id: "syn_gen5_5", name: "5기생 완성", type: "gen", required_gen: 5, count: 5, score: 999999, jackpot: true },
-      { id: "syn_gen6_3", name: "holoX 모임", type: "gen", required_gen: "holoX", count: 3, score: 1500 },
-      { id: "syn_gen6_4", name: "holoX 집결", type: "gen", required_gen: "holoX", count: 4, score: 15000 },
-      { id: "syn_gen6_5", name: "holoX 완성", type: "gen", required_gen: "holoX", count: 5, score: 999999, jackpot: true },
-      { id: "syn_gamers_3", name: "GAMERS 집결 🎮", type: "gen", required_gen: "gamers", count: 3, score: 2000 },
-      { id: "syn_gamers_4", name: "GAMERS 완성 🎮", type: "gen", required_gen: "gamers", count: 4, score: 77777, jackpot: true },
-      
-      // DEV_IS 기수 시너지
-      { id: "syn_regloss_3", name: "ReGLOSS 모임 🎹", type: "gen", required_gen: "regloss", count: 3, score: 1500 },
-      { id: "syn_regloss_4", name: "ReGLOSS 집결 🎹", type: "gen", required_gen: "regloss", count: 4, score: 15000 },
-      { id: "syn_regloss_5", name: "ReGLOSS 완성 🎹", type: "gen", required_gen: "regloss", count: 5, score: 999999, jackpot: true },
-      { id: "syn_flowglow_3", name: "FLOWGLOW 모임 🎤", type: "gen", required_gen: "flowglow", count: 3, score: 1500 },
-      { id: "syn_flowglow_4", name: "FLOWGLOW 집결 🎤", type: "gen", required_gen: "flowglow", count: 4, score: 15000 },
-      { id: "syn_flowglow_5", name: "FLOWGLOW 완성 🎤", type: "gen", required_gen: "flowglow", count: 5, score: 999999, jackpot: true },
+        <ul>
+          <li>Hierarchical CNN Encoder</li>
+          <li>Residual Reconstruction</li>
+          <li>Lightweight UE-side Design</li>
+          <li>Stable Low-CR Reconstruction</li>
+        </ul>
 
-      // EN 기수 시너지
-      { id: "syn_en_myth_3", name: "Myth 모임 🔎", type: "gen", required_gen: "en_myth", count: 3, score: 1500 },
-      { id: "syn_en_myth_4", name: "Myth 집결 🔎", type: "gen", required_gen: "en_myth", count: 4, score: 15000 },
-      { id: "syn_en_myth_5", name: "Myth 완성 🔎", type: "gen", required_gen: "en_myth", count: 5, score: 77777, jackpot: true },
-      { id: "syn_en_promise_3", name: "Promise 모임 💎", type: "gen", required_gen: "en_promise", count: 3, score: 1500 },
-      { id: "syn_en_promise_4", name: "Promise 집결 💎", type: "gen", required_gen: "en_promise", count: 4, score: 15000 },
-      { id: "syn_en_promise_5", name: "Promise 완성 💎", type: "gen", required_gen: "en_promise", count: 5, score: 999999, jackpot: true },
-      { id: "syn_en_advent_3", name: "Advent 모임 ⛓️", type: "gen", required_gen: "en_advent", count: 3, score: 1500 },
-      { id: "syn_en_advent_4", name: "Advent 집결 ⛓️", type: "gen", required_gen: "en_advent", count: 4, score: 15000 },
-      { id: "syn_en_advent_5", name: "Advent 완성 ⛓️", type: "gen", required_gen: "en_advent", count: 5, score: 999999, jackpot: true },
-      { id: "syn_en_justice_3", name: "Justice 집결 ⚖️", type: "gen", required_gen: "en_justice", count: 3, score: 2000 },
-      { id: "syn_en_justice_4", name: "Justice 완성 ⚖️", type: "gen", required_gen: "en_justice", count: 4, score: 77777, jackpot: true },
+        <div class="metric">
+          Indoor 1/4 NMSE:
+          <strong>-22.067 dB</strong>
+        </div>
 
-      // ID 기수 시너지
-      { id: "syn_id_gen1", name: "Area 15 완성 👽", type: "gen", required_gen: "id_gen1", count: 3, score: 11111, jackpot: true },
-      { id: "syn_id_gen2", name: "Holoro 완성 🦚", type: "gen", required_gen: "id_gen2", count: 3, score: 11111, jackpot: true },
-      { id: "syn_id_gen3", name: "HoloH3ro 완성 ☔", type: "gen", required_gen: "id_gen3", count: 3, score: 11111, jackpot: true },
+        <a href="PekoraNet_README.md" target="_blank">
+          View README
+        </a>
 
-      // === 유닛 및 페어 시너지 ===
-      // JP 페어 (2인)
-      { id: "syn_소라로보", name: "소라로보 👾", type: "unit", req_members: ["sora", "roboco"], count: 2, score: 600 },
-      { id: "syn_SorAZ", name: "SorAZ 🌟🎵", type: "unit", req_members: ["sora", "azki"], count: 2, score: 600 },
-      { id: "syn_소라스이", name: "소라스이 🌟☄️", type: "unit", req_members: ["sora", "suisei"], count: 2, score: 650 },
-      { id: "syn_미코멧", name: "미코멧 ☄️🌸", type: "unit", req_members: ["miko", "suisei"], count: 2, score: 700 },
-      { id: "syn_금발트윈테일", name: "금발 트윈테일 🍎❤️", type: "unit", req_members: ["aki", "haato"], count: 2, score: 550 },
-      { id: "syn_나츠이로후부키", name: "나츠이로 후부키 🎆🦊", type: "unit", req_members: ["matsuri", "fubuki"], count: 2, score: 600 },
-      { id: "syn_오카코로", name: "오카코로 🐱🐶", type: "unit", req_members: ["okayu", "korone"], count: 2, score: 700 },
-      { id: "syn_후부미오", name: "후부미오 🦊🐺", type: "unit", req_members: ["fubuki", "mio"], count: 2, score: 600 },
-      { id: "syn_스바미오", name: "스바미오 🦆🐺", type: "unit", req_members: ["subaru", "mio"], count: 2, score: 600 },
-      { id: "syn_아쿠시오", name: "아쿠시오 💧🔮", type: "unit", req_members: ["aqua", "shion"], count: 2, score: 650 },
-      { id: "syn_페코마리", name: "페코마리 🐰⚓", type: "unit", req_members: ["pekora", "marine"], count: 2, score: 650 },
-      { id: "syn_노에후레", name: "노에후레 ⚔️🔥", type: "unit", req_members: ["noel", "flare"], count: 2, score: 650 },
-      { id: "syn_페코미코", name: "페코미코 🐰🌸", type: "unit", req_members: ["pekora", "miko"], count: 2, score: 600 },
-      { id: "syn_카나코코", name: "카나코코 😇🐉", type: "unit", req_members: ["kanata", "coco"], count: 2, score: 700 },
-      { id: "syn_토와스이", name: "토와스이 😈☄️", type: "unit", req_members: ["towa", "suisei"], count: 2, score: 600 },
-      { id: "syn_이카로스", name: "이카로스 😈🦆", type: "unit", req_members: ["towa", "subaru"], count: 2, score: 600 },
-      { id: "syn_시시라미", name: "시시라미 🦁❄️", type: "unit", req_members: ["botan", "lamy"], count: 2, score: 650 },
-      { id: "syn_폴네네", name: "포네네 🎪🌸", type: "unit", req_members: ["polka", "nene"], count: 2, score: 600 },
-      { id: "syn_야마다엄마", name: "총수와 엄마 ⚡🦅", type: "unit", req_members: ["laplus", "lui"], count: 2, score: 600 },
-      { id: "syn_코요쿠로", name: "코요쿠로 🧪🦭", type: "unit", req_members: ["koyori", "chloe"], count: 2, score: 650 },
-      { id: "syn_이로코요", name: "이로코요 🌿🧪", type: "unit", req_members: ["iroha", "koyori"], count: 2, score: 600 },
-      { id: "syn_마리노에", name: "마리노에 ⚓⚔️", type: "unit", req_members: ["marine", "noel"], count: 2, score: 650 },
-      { id: "syn_아야스바", name: "아야스바 👹🦆", type: "unit", req_members: ["ayame", "subaru"], count: 2, score: 600 },
-      { id: "syn_와타보탄", name: "와타보탄 🐑🦁", type: "unit", req_members: ["watame", "botan"], count: 2, score: 650 },
-      { id: "syn_시온마린", name: "시온마린 🔮⚓", type: "unit", req_members: ["shion", "marine"], count: 2, score: 600 },
-      { id: "syn_카나라미", name: "카나라미 😇❄️", type: "unit", req_members: ["kanata", "lamy"], count: 2, score: 600 },
-      { id: "syn_미코후레", name: "미코후레 🌸🔥", type: "unit", req_members: ["miko", "flare"], count: 2, score: 600 },
-      { id: "syn_포루후레", name: "포루후레 🎪🔥", type: "unit", req_members: ["polka", "flare"], count: 2, score: 600 },
-      { id: "syn_라프토와", name: "라프토와 ⚡😈", type: "unit", req_members: ["laplus", "towa"], count: 2, score: 650 },
-      { id: "syn_루나마츠", name: "루나마츠 🌙🎆", type: "unit", req_members: ["luna", "matsuri"], count: 2, score: 600 },
-      { id: "syn_카나루나", name: "카나루나 😇🌙", type: "unit", req_members: ["kanata", "luna"], count: 2, score: 600 },
-      { id: "syn_토와쿠아", name: "토와쿠아 😈💧", type: "unit", req_members: ["towa", "aqua"], count: 2, score: 600 },
-      { id: "syn_페코루시", name: "페코루시 🐰🦋", type: "unit", req_members: ["pekora", "rushia"], count: 2, score: 650 },
-      { id: "syn_마리루시", name: "마리루시 ⚓🦋", type: "unit", req_members: ["marine", "rushia"], count: 2, score: 600 },
-      { id: "syn_루이클로", name: "루이클로 🦅🦭", type: "unit", req_members: ["lui", "chloe"], count: 2, score: 600 },
-      { id: "syn_야마이로", name: "야마이로 ⚡🌿", type: "unit", req_members: ["laplus", "iroha"], count: 2, score: 600 },
-      { id: "syn_마리챠", name: "마리챠 ⚓❤️", type: "unit", req_members: ["marine", "haato"], count: 2, score: 650 },
-      { id: "syn_스타마치", name: "스타마치 ☄️😇", type: "unit", req_members: ["suisei", "kanata"], count: 2, score: 650 },
-      { id: "syn_스이코로", name: "스이코로 ☄️🐶", type: "unit", req_members: ["suisei", "korone"], count: 2, score: 600 },
-      { id: "syn_아쿠스바", name: "아쿠스바 💧🦆", type: "unit", req_members: ["aqua", "subaru"], count: 2, score: 600 },
-      { id: "syn_miKorone", name: "미코로네 🌸🐶", type: "unit", req_members: ["miko", "korone"], count: 2, score: 600 },
-      { id: "syn_ChocoMel", name: "초코멜 🍫🦇", type: "unit", req_members: ["choco", "mel"], count: 2, score: 600 },
-      { id: "syn_Festivaluna", name: "페스티발루나 🎆🌙", type: "unit", req_members: ["matsuri", "luna"], count: 2, score: 650 },
-      { id: "syn_PeBot", name: "PEBOT 🐰🦁", type: "unit", req_members: ["pekora", "botan"], count: 2, score: 600 },
-      { id: "syn_KanaTowa", name: "카나토와 😇😈", type: "unit", req_members: ["kanata", "towa"], count: 2, score: 600 },
+      </div>
 
-      // DEV_IS (2인)
-      { id: "syn_리리나데", name: "리리나데 🌆🎹", type: "unit", req_members: ["ririka", "kanade"], count: 2, score: 700 },
-      { id: "syn_카나하지", name: "카나하지 🎹⚡", type: "unit", req_members: ["kanade", "hajime"], count: 2, score: 700 },
-      { id: "syn_아오라덴", name: "아오라덴 🖊️⛩️", type: "unit", req_members: ["ao", "raden"], count: 2, score: 600 },
-      { id: "syn_리오니코", name: "리오니코 🎤🐯", type: "unit", req_members: ["riona", "niko"], count: 2, score: 600 },
-      { id: "syn_수비비", name: "스우비비 🌀✨", type: "unit", req_members: ["su", "vivi"], count: 2, score: 600 },
-      { id: "syn_아오하지", name: "아오하지 🖊️⚡", type: "unit", req_members: ["ao", "hajime"], count: 2, score: 600 },
+      <!-- DPAS -->
+      <div class="project-card">
 
-      // EN 및 크로스오버 페어 (2인)
-      { id: "syn_타카모리", name: "타카모리 🐔💀", type: "unit", req_members: ["calli", "kiara"], count: 2, score: 650 },
-      { id: "syn_아메사메", name: "아메사메 🔎🦈", type: "unit", req_members: ["amelia", "gura"], count: 2, score: 650 },
-      { id: "syn_이나아메", name: "이나아메 🐙🔎", type: "unit", req_members: ["ina", "amelia"], count: 2, score: 600 },
-      { id: "syn_BaeRyS", name: "BaeRyS 🎲💎", type: "unit", req_members: ["baelz", "irys"], count: 2, score: 650 },
-      { id: "syn_크론메이", name: "크론메이 ⏳🪶", type: "unit", req_members: ["kronii", "mumei"], count: 2, score: 650 },
-      { id: "syn_후와모코", name: "후와모코 🩵🩷", type: "unit", req_members: ["fuwawa", "mococo"], count: 2, score: 700 },
-      { id: "syn_시오리사", name: "시오리사 👁️🎼", type: "unit", req_members: ["shiori", "nerissa"], count: 2, score: 600 },
-      { id: "syn_비쥬리사", name: "비쥬리사 🗿🎼", type: "unit", req_members: ["bijou", "nerissa"], count: 2, score: 600 },
-      { id: "syn_ERBGigi", name: "엘리자베스&지지 🩸👊", type: "unit", req_members: ["elizabeth", "gigi"], count: 2, score: 650 },
-      { id: "syn_FauMei", name: "파우메이 🌿🪶", type: "unit", req_members: ["fauna", "mumei"], count: 2, score: 650 },
-      { id: "syn_KroFauna", name: "크로파우 ⏳🌿", type: "unit", req_members: ["kronii", "fauna"], count: 2, score: 600 },
-      { id: "syn_TimeTravelers", name: "시간여행자 🔎⏳", type: "unit", req_members: ["amelia", "kronii"], count: 2, score: 700 },
-      { id: "syn_DeathSound", name: "죽음과 소리 💀🎼", type: "unit", req_members: ["calli", "nerissa"], count: 2, score: 650 },
-      { id: "syn_BaeTowa", name: "카미오시 🎲😈", type: "unit", req_members: ["baelz", "towa"], count: 2, score: 700 },
-      { id: "syn_CeciRao", name: "체치라오 🎻🐾", type: "unit", req_members: ["cecilia", "raora"], count: 2, score: 600 },
-      { id: "syn_GigiRao", name: "지지라오 👊🐾", type: "unit", req_members: ["gigi", "raora"], count: 2, score: 600 },
-      { id: "syn_SameTako", name: "사메타코 🦈🐙", type: "unit", req_members: ["gura", "ina"], count: 2, score: 600 },
-      { id: "syn_BoneBros", name: "BoneBros 💀🪶", type: "unit", req_members: ["calli", "mumei"], count: 2, score: 650 },
-      { id: "syn_GarlicShark", name: "마늘상어 🔮🦈", type: "unit", req_members: ["shion", "gura"], count: 2, score: 700 },
-      { id: "syn_DeathComet", name: "DeathComet 💀☄️", type: "unit", req_members: ["calli", "suisei"], count: 2, score: 700 },
-      { id: "syn_KoboJou", name: "돌과 물 🗿☔", type: "unit", req_members: ["bijou", "kobo"], count: 2, score: 650 },
-      { id: "syn_하아코코", name: "EN 0기생 ❤️🐉", type: "unit", req_members: ["haato", "coco"], count: 2, score: 700 },
-      { id: "syn_아키무나", name: "로제타이 🌺🔮", type: "unit", req_members: ["aki", "moona"], count: 2, score: 650 },
-      { id: "syn_페코무나", name: "페코무나 🐰🔮", type: "unit", req_members: ["pekora", "moona"], count: 2, score: 750 },
-      { id: "syn_코보키아라", name: "엄마와 딸 🐔☔", type: "unit", req_members: ["kiara", "kobo"], count: 2, score: 650 },
+        <h3>DPAS-CsiNet</h3>
 
-      // 다인큐/대형 유닛 (3인 이상)
-      { id: "syn_holokr", name: "HoloKR...?", type: "unit", req_members: ["kanade", "kronii", "ina"], count: 3, score: 5000 },
-      { id: "syn_만지구미", name: "만지구미 💧🔮👹", type: "unit", req_members: ["aqua", "shion", "ayame"], count: 3, score: 5000 },
-      { id: "syn_Startend", name: "Startend ☄️💧😈", type: "unit", req_members: ["suisei", "aqua", "towa"], count: 3, score: 5000 },
-      { id: "syn_아야후부미", name: "아야후부미 👹🦊🐺", type: "unit", req_members: ["ayame", "fubuki", "mio"], count: 3, score: 5000 },
-      { id: "syn_스바초코루나", name: "스바초코루나 🦆🍫🌙", type: "unit", req_members: ["subaru", "choco", "luna"], count: 3, score: 5000 },
-      { id: "syn_바카타레", name: "바카타레 공도 🦊🔥🐑", type: "unit", req_members: ["fubuki", "flare", "watame"], count: 3, score: 5000 },
-      { id: "syn_NegiU", name: "NEGI☆U 💧🦆🌸", type: "unit", req_members: ["aqua", "subaru", "nene"], count: 3, score: 5000 },
-      { id: "syn_FubuMikoMet", name: "후부미코멧 🦊🌸☄️", type: "unit", req_members: ["fubuki", "miko", "suisei"], count: 3, score: 5000 },
-      { id: "syn_MioMikoSuba", name: "미오미코스바 🐺🌸🦆", type: "unit", req_members: ["mio", "miko", "subaru"], count: 3, score: 5000 },
-      { id: "syn_CHADCAST", name: "CHADCAST 💀💎🎲", type: "unit", req_members: ["calli", "irys", "baelz"], count: 3, score: 5000 },
-      { id: "syn_Doggos", name: "멍멍이 연합 🐶🩵🩷", type: "unit", req_members: ["korone", "fuwawa", "mococo"], count: 3, score: 5000 },
-      
-      { id: "syn_FAMS", name: "FAMS 🦊👹🐺🦆", type: "unit", req_members: ["fubuki", "ayame", "mio", "subaru"], count: 4, score: 50000 },
-      { id: "syn_SubaChocoLunaTan", name: "스바초코루나탄 🦆🍫🌙🦁", type: "unit", req_members: ["subaru", "choco", "luna", "botan"], count: 4, score: 50000 },
-      { id: "syn_UMISEA", name: "UMISEA 🌊", type: "unit", req_members: ["aqua", "marine", "ina", "gura", "chloe"], count: 4, score: 50000 },
-      { id: "syn_SMOK", name: "SMOK 🦆🐺🐱🐶", type: "unit", req_members: ["subaru", "mio", "okayu", "korone"], count: 4, score: 50000 },
-      { id: "syn_SNOT", name: "SNOT 🦈🍂🌿🪶", type: "unit", req_members: ["gura", "anya", "fauna", "mumei"], count: 4, score: 50000 },
-      { id: "syn_네포라보", name: "네포라보 ❄️🌸🦁🎪", type: "unit", req_members: ["lamy", "nene", "botan", "polka"], count: 4, score: 50000 },
+        <p class="project-subtitle">
+          Dual-Path Adaptive Spectral Compression
+        </p>
 
-      { id: "syn_시라켄", name: "시라누이 건설 🎪☄️🔥🌸⚔️", type: "unit", req_members: ["flare", "polka", "miko", "suisei", "noel"], count: 5, score: 999999, jackpot: true },
-      { id: "syn_Usaken", name: "우사다 건설 🐰🔮😈🦁😇", type: "unit", req_members: ["pekora", "moona", "towa", "botan", "kanata"], count: 5, score: 999999, jackpot: true },
-      { id: "syn_Holotori", name: "홀로토리(Holotori) 🦆🐔🪶🦚🦅", type: "unit", req_members: ["subaru", "kiara", "mumei", "reine", "lui"], count: 5, score: 999999, jackpot: true }
-    ];
+        <ul>
+          <li>Dual-Path Encoder</li>
+          <li>Adaptive Frequency Gating</li>
+          <li>Spectral Refinement Block</li>
+          <li>FFT-domain Feature Learning</li>
+        </ul>
 
-    let tries = 0, bestScore = 0, bestSynName = '-';
-    let bestDrawn = []; 
-    let bestAchieved = []; 
+        <div class="metric">
+          Indoor 1/4 NMSE:
+          <strong>-24.72 dB</strong>
+        </div>
 
-    function getRegion(t) {
-      const g = t.gens[0];
-      if (typeof g === 'string' && g.startsWith('en_')) return 'EN';
-      if (typeof g === 'string' && g.startsWith('id_')) return 'ID';
-      return 'JP'; 
-    }
+        <a href="DPAS_README.md" target="_blank">
+          View README
+        </a>
 
-    function genClass(t) {
-      const g = t.gens[0];
-      if (typeof g === 'string' && (g.startsWith('en_') || g.startsWith('id_'))) return g;
-      if (g === 'gamers') return 'gamers';
-      if (g === 'holoX') return 'gen6';
-      if (g === 'regloss') return 'regloss';
-      if (g === 'flowglow') return 'flowglow';
-      return 'gen' + g;
-    }
+      </div>
 
-    function genLabel(t) {
-      const g = t.gens[0];
-      if (g === 'en_myth') return 'Myth';
-      if (g === 'en_promise') return 'Promise';
-      if (g === 'en_advent') return 'Advent';
-      if (g === 'en_justice') return 'Justice';
-      if (g === 'id_gen1') return 'ID 1기';
-      if (g === 'id_gen2') return 'ID 2기';
-      if (g === 'id_gen3') return 'ID 3기';
-      if (g === 'gamers') return 'GAMERS';
-      if (g === 'holoX') return 'holoX';
-      if (g === 'regloss') return 'ReGLOSS';
-      if (g === 'flowglow') return 'FLOWGLOW';
-      return g + '기생';
-    }
+      <!-- TowaNet -->
+      <div class="project-card featured">
 
-    function pickTalent(exclude) {
-      const pool = TALENTS.filter(t => !exclude.has(t.id));
-      return pool[Math.floor(Math.random() * pool.length)];
-    }
+        <h3>TowaNet 👾</h3>
 
-    function calcSynergies(drawn) {
-      const achieved = [];
-      let total = 0;
-      
-      const genMatchMap = {};
+        <p class="project-subtitle">
+          Topology-Oriented Wireless Autoencoder
+        </p>
 
-      let jpCount = 0, enCount = 0, idCount = 0;
-      const jpMembers = [], enMembers = [], idMembers = [];
-      
-      drawn.forEach(t => {
-        const r = getRegion(t);
-        if (r === 'JP') { jpCount++; jpMembers.push(t); }
-        else if (r === 'EN') { enCount++; enMembers.push(t); }
-        else if (r === 'ID') { idCount++; idMembers.push(t); }
-      });
+        <ul>
+          <li>Spatial Compression Encoder</li>
+          <li>TowaRefineBlock</li>
+          <li>Decoder-centric Refinement</li>
+          <li>AMP-safe Architecture</li>
+        </ul>
 
-      for (const syn of SYNERGIES) {
-        if (syn.type === 'region') {
-          if (syn.required_region === 'JP' && jpCount >= syn.count) { 
-            achieved.push({ syn, members: jpMembers }); total += syn.score; 
-          }
-          else if (syn.required_region === 'EN' && enCount >= syn.count) { 
-            achieved.push({ syn, members: enMembers }); total += syn.score; 
-          }
-          else if (syn.required_region === 'ID' && idCount >= syn.count) { 
-            achieved.push({ syn, members: idMembers }); total += syn.score; 
-          }
-        } else if (syn.type === 'gen') {
-          const matchedMembers = drawn.filter(t => t.gens.includes(syn.required_gen));
-          if (matchedMembers.length >= syn.count) {
-            if (!genMatchMap[syn.required_gen] || genMatchMap[syn.required_gen].syn.count < syn.count) {
-              genMatchMap[syn.required_gen] = { syn, members: matchedMembers };
-            }
-          }
-        } else if (syn.type === 'unit') {
-          const matchedMembers = drawn.filter(t => syn.req_members.includes(t.id));
-          if (matchedMembers.length >= syn.count) {
-            achieved.push({ syn, members: matchedMembers });
-            total += syn.score;
-          }
-        }
-      }
-      
-      for (const key in genMatchMap) {
-        achieved.push(genMatchMap[key]);
-        total += genMatchMap[key].syn.score;
-      }
+        <div class="metric">
+          Indoor 1/4 NMSE:
+          <strong>-26.50 dB</strong>
+        </div>
 
-      const gradMembers = drawn.filter(t => t.graduated);
-      if (gradMembers.length >= 5) {
-        achieved.push({
-          syn: { id: "syn_hidden_grad", name: "영원한 기억 ✨", type: "hidden", count: 5, score: 20000 },
-          members: gradMembers
-        });
-        total += 5000;
-      }
-      
-      return { achieved, total };
-    }
+        <a href="TowaNet_README.md" target="_blank">
+          View README
+        </a>
 
-    function doChallenge() {
-      const btn = document.getElementById('btn-challenge');
-      btn.disabled = true;
+      </div>
 
-      const exclude = new Set();
-      const drawn = [];
-      
-      for (let i = 0; i < 5; i++) {
-        const t = pickTalent(exclude);
-        exclude.add(t.id);
-        drawn.push(t);
-      }
+    </div>
 
-      const { achieved, total } = calcSynergies(drawn);
-      tries++;
-      
-      if (total > bestScore) {
-        bestScore = total;
-        bestSynName = achieved.length ? achieved.sort((a, b) => b.syn.score - a.syn.score)[0].syn.name : '없음';
-        bestDrawn = [...drawn];
-        bestAchieved = [...achieved];
-        document.getElementById('btn-best').disabled = false;
-      }
+  </section>
 
-      const cardsEl = document.getElementById('cards');
-      cardsEl.innerHTML = '';
-      
-      drawn.forEach((t, i) => {
-        const d = document.createElement('div');
-        const gradClass = t.graduated ? ' graduated' : '';
-        d.className = `card ${genClass(t)}${gradClass}`;
-        d.style.animationDelay = `${i * 80}ms`;
-        const gradBadge = t.graduated ? `<div class="c-grad">졸업</div>` : '';
-        d.innerHTML = `
-          <div class="c-rar">${genLabel(t)}</div>
-          <span class="c-icon">${t.icon}</span>
-          <div class="c-name">${t.name_kr}</div>
-          ${gradBadge}
-        `;
-        cardsEl.appendChild(d);
-      });
+  <!-- COMPARISON -->
+  <section class="comparison">
 
-      document.getElementById('result-panel').style.display = 'block';
-      document.getElementById('cur-score').textContent = total.toLocaleString();
+    <h2>Architecture Comparison</h2>
 
-      const comments = [
-        [0, '시너지 없음... 다시 도전!'],
-        [500, '소소한 인연 발견! 🌱'],
-        [1500, '오, 좋은 조합! ⭐'],
-        [5000, '놀라운 시너지! 🌟'],
-        [30000, '대박!! 전설의 조합!! 💫'],
-        [100000, '🔥🔥 기적의 잭팟 달성!!! 🔥🔥']
-      ];
-      const msg = comments.slice().reverse().find(([min]) => total >= min)[1];
-      
-      document.getElementById('score-comment').innerHTML = `
-        <span>${msg}</span><br>
-        <span style="color:#555">최고: ${bestScore.toLocaleString()}</span>
-      `;
+    <table>
 
-      const chipsEl = document.getElementById('syn-chips');
-      if (!achieved.length) {
-        chipsEl.innerHTML = '<div class="no-syn">아쉽게도 이번엔 시너지가 없었어요.</div>';
-      } else {
-        chipsEl.innerHTML = achieved
-          .sort((a, b) => b.syn.score - a.syn.score)
-          .map((item, i) => {
-            const s = item.syn;
-            const m = item.members;
-            
-            let chipClass = '';
-            if (s.jackpot) chipClass = 'jackpot';
-            else if (s.type === 'region') chipClass = 'region';
-            else if (s.type === 'hidden') chipClass = 'hidden'; 
-            else if (s.score >= 30000) chipClass = 'diamond';
-            else if (s.score >= 1500) chipClass = 'platinum';
-            else if (s.score >= 700) chipClass = 'gold';
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Main Idea</th>
+          <th>Strength</th>
+        </tr>
+      </thead>
 
-            const memberIcons = m.map(t => t.icon).join(''); 
+      <tbody>
 
-            return `
-              <span class="syn-chip ${chipClass}" style="animation-delay:${i * 60}ms">
-                ${s.name} <span class="sc-pts">+${s.score.toLocaleString()}</span>
-                <span class="sc-members">${memberIcons}</span>
-              </span>
-            `;
-          }).join('');
-      }
+        <tr>
+          <td>PekoraNet</td>
+          <td>Hierarchical CNN Compression</td>
+          <td>Lightweight Design</td>
+        </tr>
 
-      document.getElementById('try-count').textContent = tries;
-      document.getElementById('best-score').textContent = bestScore.toLocaleString();
-      document.getElementById('best-syn').textContent = bestSynName;
+        <tr>
+          <td>DPAS-CsiNet</td>
+          <td>FFT + DualPath Learning</td>
+          <td>Spectral Refinement</td>
+        </tr>
 
-      setTimeout(() => btn.disabled = false, 300);
-      renderSynTable(achieved.map(item => item.syn.id));
-    }
+        <tr>
+          <td>TowaNet</td>
+          <td>Spatial Compression + Refine</td>
+          <td>Best Reconstruction Performance</td>
+        </tr>
 
-    function doReset() {
-      tries = 0;
-      bestScore = 0;
-      bestSynName = '-';
-      bestDrawn = []; 
-      bestAchieved = []; 
-      document.getElementById('btn-best').disabled = true; 
+      </tbody>
 
-      document.getElementById('cards').innerHTML = '';
-      document.getElementById('result-panel').style.display = 'none';
-      document.getElementById('try-count').textContent = '0';
-      document.getElementById('best-score').textContent = '0';
-      document.getElementById('best-syn').textContent = '-';
-      renderSynTable([]);
-    }
+    </table>
 
-    let isTableOpen = false;
-    function toggleTable() {
-      isTableOpen = !isTableOpen;
-      const table = document.getElementById('syn-table');
-      const icon = document.getElementById('syn-toggle-icon');
-      const text = document.getElementById('syn-toggle-text');
+  </section>
 
-      if (isTableOpen) {
-        table.style.display = 'block';
-        icon.classList.remove('closed');
-        text.textContent = '시너지 일람 닫기';
-      } else {
-        table.style.display = 'none';
-        icon.classList.add('closed');
-        text.textContent = '시너지 일람 열기';
-      }
-    }
+  <!-- FOOTER -->
+  <footer>
 
-    function renderSynTable(achievedIds) {
-      const el = document.getElementById('syn-table');
-      const regionSyns = SYNERGIES.filter(s => s.type === 'region');
-      const unitSyns = SYNERGIES.filter(s => s.type === 'unit');
-      const genSyns = SYNERGIES.filter(s => s.type === 'gen');
-      
-      const devisUnitSyns = unitSyns.filter(s => s.req_members.some(m => ['ao', 'kanade', 'ririka', 'raden', 'hajime', 'riona', 'niko', 'su', 'chihaya', 'vivi'].includes(m)));
-      const otherUnitSyns = unitSyns.filter(s => !devisUnitSyns.includes(s));
-      
-      const jpGenSyns = genSyns.filter(s => typeof s.required_gen === 'number' || s.required_gen === 'gamers' || s.required_gen === 'holoX');
-      const devisGenSyns = genSyns.filter(s => s.required_gen === 'regloss' || s.required_gen === 'flowglow');
-      const enGenSyns = genSyns.filter(s => typeof s.required_gen === 'string' && s.required_gen.startsWith('en_'));
-      const idGenSyns = genSyns.filter(s => typeof s.required_gen === 'string' && s.required_gen.startsWith('id_'));
+    <p>
+      Massive MIMO CSI Compression Research Archive
+    </p>
 
-      const makeRow = (s) => {
-        const hit = achievedIds.includes(s.id);
-        let members = '';
-        
-        if (s.type === 'unit') {
-          members = s.req_members.map(id => {
-            const t = TALENTS.find(x => x.id === id);
-            return t ? t.icon + ' ' + t.name_kr : '';
-          }).join(' · ');
-        } else if (s.type === 'gen') {
-          members = TALENTS.filter(t => t.gens.includes(s.required_gen)).map(t => t.icon + ' ' + t.name_kr).join(' · ');
-        } else if (s.type === 'region') {
-          if (s.required_region === 'JP') members = 'JP (DEV_IS 포함) 멤버 출현 시';
-          if (s.required_region === 'EN') members = 'EN 소속 멤버 출현 시';
-          if (s.required_region === 'ID') members = 'ID 소속 멤버 출현 시';
-        }
-          
-        return `
-          <div class="syn-row" style="${hit ? 'border-color:#ffd70088;background:#1e1400' : ''}">
-            <div class="sr-name" style="${s.type === 'region' ? 'color:#4dd9ff;' : ''}">${hit ? '✅ ' : ''}${s.name}</div>
-            <div class="sr-members" style="font-size: 0.55rem;">${members}</div>
-            <div class="sr-cnt">${s.count}인</div>
-            <div class="sr-pts">+${s.score.toLocaleString()}</div>
-          </div>
-        `;
-      };
+    <p>
+      Deep Learning · Wireless Communication · PyTorch
+    </p>
 
-      el.innerHTML =
-        `<div class="group-label">— 국가별 시너지 (Region) —</div>` +
-        regionSyns.map(makeRow).join('') +
-        `<div class="group-label">— 페어 / 유닛 시너지 —</div>` +
-        otherUnitSyns.map(makeRow).join('') +
-        devisUnitSyns.map(makeRow).join('') +
-        `<div class="group-label">— JP 기수별 시너지 —</div>` +
-        jpGenSyns.map(makeRow).join('') +
-        `<div class="group-label">— EN 기수별 시너지 —</div>` +
-        enGenSyns.map(makeRow).join('') +
-        `<div class="group-label">— ID 기수별 시너지 —</div>` +
-        idGenSyns.map(makeRow).join('') +
-        `<div class="group-label">— DEV_IS 기수별 시너지 —</div>` +
-        devisGenSyns.map(makeRow).join('');
-    }
+  </footer>
 
-    function showBestRecord() {
-      if (bestDrawn.length === 0) return;
-      
-      const cardsEl = document.getElementById('modal-cards');
-      cardsEl.innerHTML = '';
-      
-      bestDrawn.forEach((t) => {
-        const d = document.createElement('div');
-        const gradClass = t.graduated ? ' graduated' : '';
-        d.className = `card ${genClass(t)}${gradClass}`;
-        const gradBadge = t.graduated ? `<div class="c-grad">졸업</div>` : '';
-        d.innerHTML = `
-          <div class="c-rar">${genLabel(t)}</div>
-          <span class="c-icon">${t.icon}</span>
-          <div class="c-name">${t.name_kr}</div>
-          ${gradBadge}
-        `;
-        cardsEl.appendChild(d);
-      });
-
-      document.getElementById('modal-best-score').textContent = bestScore.toLocaleString();
-
-      const modalChipsEl = document.getElementById('modal-syn-chips');
-      if (!bestAchieved.length) {
-        modalChipsEl.innerHTML = '<div class="no-syn">달성한 시너지가 없습니다.</div>';
-      } else {
-        modalChipsEl.innerHTML = bestAchieved
-          .sort((a, b) => b.syn.score - a.syn.score)
-          .map((item, i) => {
-            const s = item.syn;
-            const m = item.members;
-            
-            let chipClass = '';
-            if (s.jackpot) chipClass = 'jackpot';
-            else if (s.type === 'region') chipClass = 'region';
-            else if (s.type === 'hidden') chipClass = 'hidden'; 
-            else if (s.score >= 30000) chipClass = 'diamond';
-            else if (s.score >= 1500) chipClass = 'platinum';
-            else if (s.score >= 700) chipClass = 'gold';
-
-            const memberIcons = m.map(t => t.icon).join(''); 
-
-            return `
-              <span class="syn-chip ${chipClass}" style="animation-delay:${i * 60}ms">
-                ${s.name} <span class="sc-pts">+${s.score.toLocaleString()}</span>
-                <span class="sc-members">${memberIcons}</span>
-              </span>
-            `;
-          }).join('');
-      }
-
-      document.getElementById('best-modal').style.display = 'flex';
-    }
-
-    function closeBestRecord() {
-      document.getElementById('best-modal').style.display = 'none';
-    }
-
-    renderSynTable([]);
-  </script>
 </body>
 </html>
