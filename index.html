@@ -1,211 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <title>CSI Compression Research</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 
 <body>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-content">
+<button id="themeToggle" class="theme-toggle">
+  🌙 Dark Mode
+</button>
 
-      <h1>
-        Massive MIMO CSI Feedback Compression
-      </h1>
+<section class="hero">
 
-      <p>
-        Deep Learning-based CSI Compression Research Projects
-        for FDD Massive MIMO Systems
+  <div class="hero-content">
+
+    <p class="hero-tag">
+      Massive MIMO · Deep Learning · CSI Compression
+    </p>
+
+    <h1>
+      Deep Learning-Based CSI Feedback Compression
+    </h1>
+
+    <p class="hero-description">
+      Research archive for lightweight and high-performance
+      CSI feedback compression architectures in Massive MIMO
+      FDD systems.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#projects">Explore Research</a>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="timeline">
+
+  <h2>Research Evolution</h2>
+
+  <div class="timeline-container">
+
+    <div class="timeline-item">
+      <h3>PekoraNet 🐇</h3>
+      <p>Hierarchical CNN Compression</p>
+    </div>
+
+    <div class="timeline-arrow">→</div>
+
+    <div class="timeline-item">
+      <h3>DPAS-CsiNet</h3>
+      <p>Spectral-domain Learning</p>
+    </div>
+
+    <div class="timeline-arrow">→</div>
+
+    <div class="timeline-item">
+      <h3>TowaNet 👾</h3>
+      <p>Topology-Oriented Refinement</p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="projects" id="projects">
+
+  <h2>Research Projects</h2>
+
+  <div class="project-grid">
+
+    <div class="project-card">
+
+      <div class="project-label">
+        Lightweight Baseline
+      </div>
+
+      <h3>PekoraNet 🐇</h3>
+
+      <p class="project-subtitle">
+        A Lightweight Hierarchical CNN Framework
+        for CSI Feedback Compression
       </p>
 
-      <div class="hero-buttons">
-        <a href="#projects">View Projects</a>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- TIMELINE -->
-  <section class="timeline">
-
-    <h2>Research Evolution</h2>
-
-    <div class="timeline-container">
-
-      <div class="timeline-item">
-        <h3>PekoraNet 🐇</h3>
-        <p>Hierarchical CNN Compression</p>
-      </div>
-
-      <div class="timeline-arrow">↓</div>
-
-      <div class="timeline-item">
-        <h3>DPAS-CsiNet</h3>
-        <p>Spectral-domain Refinement</p>
-      </div>
-
-      <div class="timeline-arrow">↓</div>
-
-      <div class="timeline-item">
-        <h3>TowaNet 👾</h3>
-        <p>Topology-Oriented Reconstruction</p>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- PROJECTS -->
-  <section class="projects" id="projects">
-
-    <h2>Projects</h2>
-
-    <div class="project-grid">
-
-      <!-- PekoraNet -->
-      <div class="project-card">
-
-        <h3>PekoraNet 🐇</h3>
-
-        <p class="project-subtitle">
-          Lightweight Hierarchical CNN Framework
+      <div class="project-section">
+        <h4>Motivation</h4>
+        <p>
+          PekoraNet focuses on practical deployment feasibility
+          for UE-side CSI compression by combining hierarchical
+          CNN encoding and lightweight reconstruction refinement.
         </p>
+      </div>
+
+      <div class="project-section">
+        <h4>Key Features</h4>
 
         <ul>
-          <li>Hierarchical CNN Encoder</li>
-          <li>Residual Reconstruction</li>
-          <li>Lightweight UE-side Design</li>
-          <li>Stable Low-CR Reconstruction</li>
+          <li>Hierarchical CNN encoder</li>
+          <li>Residual reconstruction refinement</li>
+          <li>Low-parameter lightweight design</li>
+          <li>Stable low-CR reconstruction</li>
         </ul>
+      </div>
 
-        <div class="metric">
-          Indoor 1/4 NMSE:
+      <div class="project-section">
+        <h4>Architecture</h4>
+
+        <div class="code-block">
+Conv2d(2→16)
+↓
+Conv2d(16→32)
+↓
+Latent Compression
+↓
+ConvTranspose2d
+↓
+Residual Reconstruction
+        </div>
+      </div>
+
+      <div class="metric-box">
+
+        <div>
+          <span>Indoor 1/4 NMSE</span>
           <strong>-22.067 dB</strong>
         </div>
 
-        <a href="PekoraNet_README.md" target="_blank">
-          View README
-        </a>
-
-      </div>
-
-      <!-- DPAS -->
-      <div class="project-card">
-
-        <h3>DPAS-CsiNet</h3>
-
-        <p class="project-subtitle">
-          Dual-Path Adaptive Spectral Compression
-        </p>
-
-        <ul>
-          <li>Dual-Path Encoder</li>
-          <li>Adaptive Frequency Gating</li>
-          <li>Spectral Refinement Block</li>
-          <li>FFT-domain Feature Learning</li>
-        </ul>
-
-        <div class="metric">
-          Indoor 1/4 NMSE:
-          <strong>-24.72 dB</strong>
+        <div>
+          <span>Parameters</span>
+          <strong>~2.1M</strong>
         </div>
-
-        <a href="DPAS_README.md" target="_blank">
-          View README
-        </a>
-
-      </div>
-
-      <!-- TowaNet -->
-      <div class="project-card featured">
-
-        <h3>TowaNet 👾</h3>
-
-        <p class="project-subtitle">
-          Topology-Oriented Wireless Autoencoder
-        </p>
-
-        <ul>
-          <li>Spatial Compression Encoder</li>
-          <li>TowaRefineBlock</li>
-          <li>Decoder-centric Refinement</li>
-          <li>AMP-safe Architecture</li>
-        </ul>
-
-        <div class="metric">
-          Indoor 1/4 NMSE:
-          <strong>-26.50 dB</strong>
-        </div>
-
-        <a href="TowaNet_README.md" target="_blank">
-          View README
-        </a>
 
       </div>
 
     </div>
 
-  </section>
+    <div class="project-card">
 
-  <!-- COMPARISON -->
-  <section class="comparison">
+      <div class="project-label">
+        Spectral Learning
+      </div>
 
-    <h2>Architecture Comparison</h2>
+      <h3>DPAS-CsiNet</h3>
 
-    <table>
+      <p class="project-subtitle">
+        Dual-Path Adaptive Spectral
+        CSI Compression Architecture
+      </p>
 
-      <thead>
-        <tr>
-          <th>Model</th>
-          <th>Main Idea</th>
-          <th>Strength</th>
-        </tr>
-      </thead>
+      <div class="project-section">
+        <h4>Motivation</h4>
 
-      <tbody>
+        <p>
+          DPAS-CsiNet extends the original CsiNet by introducing
+          spectral-domain processing and adaptive frequency
+          refinement mechanisms.
+        </p>
+      </div>
 
-        <tr>
-          <td>PekoraNet</td>
-          <td>Hierarchical CNN Compression</td>
-          <td>Lightweight Design</td>
-        </tr>
+      <div class="project-section">
+        <h4>Key Features</h4>
 
-        <tr>
-          <td>DPAS-CsiNet</td>
-          <td>FFT + DualPath Learning</td>
-          <td>Spectral Refinement</td>
-        </tr>
+        <ul>
+          <li>Dual-Path encoder</li>
+          <li>Adaptive Frequency Gating (AFG)</li>
+          <li>Spectral Refinement Block (SRB)</li>
+          <li>FFT-domain channel refinement</li>
+        </ul>
+      </div>
 
-        <tr>
-          <td>TowaNet</td>
-          <td>Spatial Compression + Refine</td>
-          <td>Best Reconstruction Performance</td>
-        </tr>
+      <div class="project-section">
+        <h4>Architecture</h4>
 
-      </tbody>
+        <div class="code-block">
+Input CSI
+↓
+Dual-Path Encoder
+↓
+Adaptive Frequency Gating
+↓
+Decoder
+↓
+Spectral Refinement Block
+        </div>
+      </div>
 
-    </table>
+      <div class="metric-box">
 
-  </section>
+        <div>
+          <span>Indoor 1/4 NMSE</span>
+          <strong>-24.72 dB</strong>
+        </div>
 
-  <!-- FOOTER -->
-  <footer>
+        <div>
+          <span>Core Feature</span>
+          <strong>FFT Learning</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="project-card featured">
+
+      <div class="project-label">
+        Latest Architecture
+      </div>
+
+      <h3>TowaNet 👾</h3>
+
+      <p class="project-subtitle">
+        Topology-Oriented Wireless Autoencoder
+        for CSI Compression
+      </p>
+
+      <div class="project-section">
+        <h4>Motivation</h4>
+
+        <p>
+          TowaNet combines the spectral learning strategy
+          of DPAS with the hierarchical compression philosophy
+          of PekoraNet to achieve stronger reconstruction
+          performance and AMP-safe refinement.
+        </p>
+      </div>
+
+      <div class="project-section">
+        <h4>Key Features</h4>
+
+        <ul>
+          <li>Stride=2 spatial compression</li>
+          <li>TowaRefineBlock</li>
+          <li>Decoder-centric refinement</li>
+          <li>AMP-compatible architecture</li>
+        </ul>
+      </div>
+
+      <div class="project-section">
+        <h4>Architecture</h4>
+
+        <div class="code-block">
+Input CSI
+↓
+Spatial Compression Encoder
+↓
+Latent Codeword
+↓
+16×16 Latent Reconstruction
+↓
+TowaRefineBlock ×2
+↓
+Recovered CSI
+        </div>
+      </div>
+
+      <div class="metric-box">
+
+        <div>
+          <span>Indoor 1/4 NMSE</span>
+          <strong>-26.50 dB</strong>
+        </div>
+
+        <div>
+          <span>Architecture</span>
+          <strong>AMP-safe</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="comparison">
+
+  <h2>Performance Comparison</h2>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>Main Idea</th>
+        <th>Indoor 1/4 NMSE</th>
+        <th>Strength</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <td>PekoraNet</td>
+        <td>Hierarchical CNN Compression</td>
+        <td>-22.067 dB</td>
+        <td>Lightweight Design</td>
+      </tr>
+
+      <tr>
+        <td>DPAS-CsiNet</td>
+        <td>Spectral-domain Learning</td>
+        <td>-24.72 dB</td>
+        <td>FFT Refinement</td>
+      </tr>
+
+      <tr>
+        <td>TowaNet</td>
+        <td>Topology-Oriented Refinement</td>
+        <td>-26.50 dB</td>
+        <td>Best Reconstruction</td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</section>
+
+<section class="research-direction">
+
+  <h2>Research Direction</h2>
+
+  <div class="direction-box">
 
     <p>
-      Massive MIMO CSI Compression Research Archive
+      The overall research direction focuses on balancing:
     </p>
+
+    <div class="direction-highlight">
+
+      High-performance CSI reconstruction
+      <span>and</span>
+      practical wireless deployment
+
+    </div>
 
     <p>
-      Deep Learning · Wireless Communication · PyTorch
+      Current studies explore lightweight compression,
+      spectral-domain refinement, topology-aware feature
+      extraction, and decoder-centric reconstruction
+      strategies for Massive MIMO systems.
     </p>
 
-  </footer>
+  </div>
+
+</section>
+
+<footer>
+
+  <p>
+    Massive MIMO CSI Compression Research Archive
+  </p>
+
+  <p>
+    Deep Learning · Wireless Communication · PyTorch
+  </p>
+
+</footer>
+
+<script>
+
+const toggleBtn = document.getElementById("themeToggle");
+
+toggleBtn.addEventListener("click", () => {
+
+  document.body.classList.toggle("dark-mode");
+
+  if(document.body.classList.contains("dark-mode")) {
+    toggleBtn.innerHTML = "☀️ Light Mode";
+  } else {
+    toggleBtn.innerHTML = "🌙 Dark Mode";
+  }
+
+});
+
+</script>
 
 </body>
 </html>
